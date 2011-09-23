@@ -1,0 +1,11 @@
+#ifndef _ABSPELL_CORRECTOR_H_
+#define _ABSPELL_CORRECTOR_H_
+
+#endif  // _ABSPELL_CORRECTOR_H_
+
+
+
+
+
+
+
