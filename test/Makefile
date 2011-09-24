@@ -3,27 +3,32 @@ include $(SRCROOT)/config.mak
 
 .PHONY: clean check all test
 
-TARGET = googletest
 CC_SOURCES = $(wildcard *.cc)
 HEADERS = $(INCLUDES_PATH)/*.h
 
-all: $(TARGET)
+all: FIND-GTEST
+
+GTEST_CONFIG = gtest-config
+
+FIND-GTEST:
+	$(GTEST_CONFIG) --min-version=1.0; [ $$? -ne 0 ] || $(MAKE) googletest
 
 
+TARGET = googletest
 OBJS = $(subst .cc,.o,$(CC_SOURCES))
 
 $(TARGET): gtest-main.o $(OBJS)
-	g++ $(shell gtest-config --ldflags --libs) -o $(TARGET) gtest-main.o $(OBJS)
+	g++ $(shell $(GTEST_CONFIG) --ldflags --libs) -o $(TARGET) gtest-main.o $(OBJS)
 
 %.o : %.cc
-	g++ $(shell gtest-config --cppflags --cxxflags) -o $@ -c $< -I$(INCLUDES_PATH) 
+	g++ $(shell $(GTEST_CONFIG) --cppflags --cxxflags) -o $@ -c $< -I$(INCLUDES_PATH) 
 
 gtest-main.o: gtest_main.cpp
-	g++ $(shell gtest-config --cppflags --cxxflags) -o gtest-main.o -c gtest_main.cpp
+	g++ $(shell $(GTEST_CONFIG) --cppflags --cxxflags) -o gtest-main.o -c gtest_main.cpp
 
 clean:
 	rm -f *.o
-	rm $(TARGET)
+	rm -f $(TARGET)
 
 test:
 	./$(TARGET)
