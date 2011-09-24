@@ -4,16 +4,25 @@
 #include <string>
 #include <vector>
 
+#include <distance.h>
 #include "corrections_generator.h"
 
 class LevenshteinWordCandidatesGenerator :
     public IWordCandidatesGenerator {
+ 
  public:
-  virtual void GetCandidates(
+  explicit LevenshteinWordCandidatesGenerator(
+      const IDictionary& dictionary)  
+      : dictionary_(dictionary) {
+  }
+
+  void GetCandidates(
       const std::string& word,
-      const IDictionary* dictionary,
       std::vector<CorrectionCandidate>& candidates,
-      double threshold);
+      double threshold) const;
+    
+ private:
+  const IDictionary& dictionary_;
 };
 
 

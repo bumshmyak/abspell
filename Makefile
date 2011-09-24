@@ -2,7 +2,7 @@ define doinsubdirs
 $(foreach d,$(1),$(MAKE) -C $(d) $(2) $@;)
 endef
 
-SUBDIRS = core test
+SUBDIRS = core test utils
 
 .PHONY: all check clean googletest test
 

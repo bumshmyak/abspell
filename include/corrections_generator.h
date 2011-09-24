@@ -7,23 +7,34 @@
 #include "dictionary.h"
 
 struct CorrectionCandidate {
-  std::string candidate;
-  double weight; // probability
+  CorrectionCandidate(const std::string& text, const double& weight)
+    : text_(text)
+    , weight_(weight) {
+  }
+ 
+  bool operator < (const CorrectionCandidate& rhs) const {
+    return weight_ < rhs.weight_;
+  }
+
+ public:
+  std::string text_;
+  double weight_; // probability
 };
 
 class IWordCandidatesGenerator {
  public:
   // generates all word correction candidates with distance <= threshold
   // by some metric
+  // Dictionary presence and it's interface could depend on WordCandidatesGenerator realization
   virtual void GetCandidates(
       const std::string& word,
-      const IDictionary* dictionary,
       std::vector<CorrectionCandidate>& candidates,
-      double threshold);
+      double threshold) const = 0;
+
   virtual ~IWordCandidatesGenerator() {};
 };
 
-class IPhrazeCandidatesGenerator {
+class IPhraseCandidatesGenerator {
  public:
   // one possible algo for this:
   // split phraze into words
@@ -32,9 +43,9 @@ class IPhrazeCandidatesGenerator {
   // rank phraze corrections
   virtual void GetCandidates(
       const std::string& phraze,
-      std::vector<CorrectionCandidate>& candidates);
+      std::vector<CorrectionCandidate>& candidates) const = 0;
 
-  virtual ~IPhrazeCandidatesGenerator() {};
+  virtual ~IPhraseCandidatesGenerator() {};
 };
 
 #endif  // _ABSPELL_CORRECTORIONS_GENERATOR_H_

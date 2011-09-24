@@ -18,7 +18,7 @@ TARGET = googletest
 OBJS = $(subst .cc,.o,$(CC_SOURCES))
 
 $(TARGET): gtest-main.o $(OBJS)
-	g++ $(shell $(GTEST_CONFIG) --ldflags --libs) -o $(TARGET) gtest-main.o $(OBJS)
+	g++ $(shell $(GTEST_CONFIG) --ldflags --libs) -o $(TARGET) gtest-main.o $(OBJS) -labspell -L$(INSTALL_LIB_PATH) 
 
 %.o : %.cc
 	g++ $(shell $(GTEST_CONFIG) --cppflags --cxxflags) -o $@ -c $< -I$(INCLUDES_PATH) 
@@ -31,4 +31,4 @@ clean:
 	rm -f $(TARGET)
 
 test:
-	./$(TARGET)
+	LD_LIBRARY_PATH=${LDPATH}:$(INSTALL_LIB_PATH) ./$(TARGET)

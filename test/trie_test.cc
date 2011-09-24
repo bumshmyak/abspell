@@ -31,6 +31,19 @@ string find_terms_in_trie(TTrie<TData>& trie, const string& text, int max_distan
     return out.substr(0, out.size() - 1);
 }
 
+TEST(TTrie_Test,StoreStrings) {
+    TTrie<string> trie;
+
+    trie.add("aaaaaa", "aaaaaa");
+    trie.add("aaabaa", "aaabaa");
+    trie.add("aabaaa", "aabaaa");
+    trie.add("abaaaa", "abaaaa");
+
+    EXPECT_EQ(trie.find("aaaaaa"), "aaaaaa");
+    EXPECT_EQ(find_terms_in_trie(trie, "aaaaaa", 0), "aaaaaa");
+    EXPECT_EQ(find_terms_in_trie(trie, "aaaaaa", 1), "aaaaaa aaabaa aabaaa abaaaa");
+}
+
 TEST(TTrie_Test,Add_or_Find_Test) {
     TTrie<int> trie;
 
