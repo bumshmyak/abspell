@@ -1,0 +1,6 @@
+[submodule "googletest"]
+	path = googletest
+	url = https://github.com/dustyleary/googletest.git
+[submodule "boost"]
+	path = boost
+	url = https://github.com/ryppl/boost-svn.git
