@@ -10,7 +10,7 @@ stats : stats.cc
 	$(CXX) -g -o $@ $<
 
 dict-search: dict-search.cc
-	$(CXX) -g -o $@ $< -I$(INCLUDES_PATH)
+	$(CXX) -g -o $@ $< -I$(INCLUDES_PATH) -I$(BOOST_INCLUDE_PATH)
 
 best_word_corrector: best_word_corrector.cc
 	$(CXX) -o $@ $< $(CXXFLAGS) -I$(INCLUDES_PATH) -labspell -L$(INSTALL_LIB_PATH)

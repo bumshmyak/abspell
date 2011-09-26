@@ -2,13 +2,12 @@ define doinsubdirs
 $(foreach d,$(1),$(MAKE) -C $(d) $(2) $@;)
 endef
 
-SUBDIRS = core test utils
+SUBDIRS = core utils
 
 .PHONY: all check clean googletest test
 
 all check clean:
 	$(call doinsubdirs,${SUBDIRS})
 
-test:
-	-cd test; $(MAKE) test; cd -
-
+googletest:
+	$(MAKE) -C googletest/make
