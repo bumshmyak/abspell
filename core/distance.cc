@@ -1,4 +1,5 @@
 #include <using_std.h>
+#include <cmath>
 
 struct TTraversalPosition {
   TTraversalPosition() 
@@ -45,10 +46,6 @@ int get_levenshtein_distance(const string& first_line, const string& second_line
   return front.back();
 }
 
-int get_levenshtein_distance(const string& first_line, const string& second_line) {
-  return get_levenshtein_distance(first_line, second_line, 0);
-}
-
 template <typename TOutIterator>
 void make_ngrams(const string& text, TOutIterator out, int ngramm_length = 2) {
   if (text.size() + 1 < ngramm_length) {
@@ -62,9 +59,13 @@ void make_ngrams(const string& text, TOutIterator out, int ngramm_length = 2) {
   }
   *out = text.substr(text.size() + 1 - ngramm_length , ngramm_length - 1) + "_";
   ++out;
+  // 123
 }
 
-double get_ngramm_distance(const string& first_line, const string& second_line, int ngramm_length = 2) {
+double get_ngramm_jaccard_distance(
+    const string& first_line,
+    const string& second_line,
+    int ngramm_length) {
   vector<string> first_ngramm_list;
   make_ngrams(first_line, back_inserter(first_ngramm_list), ngramm_length);
   sort(first_ngramm_list.begin(), first_ngramm_list.end());
@@ -73,30 +74,60 @@ double get_ngramm_distance(const string& first_line, const string& second_line, 
   make_ngrams(second_line, back_inserter(second_ngramm_list), ngramm_length);
   sort(second_ngramm_list.begin(), second_ngramm_list.end());
 
-  if (first_ngramm_list.size() == 0 && second_ngramm_list.size() == 0) {
-    return 0.0;
-  }
-  if ((first_ngramm_list.size() == 0) xor (second_ngramm_list.size() == 0)) {
+  if ((first_ngramm_list.size() == 0) || (second_ngramm_list.size() == 0)) {
     return 1.0;
   }
 
-  const string* last_passed_ngramm_ptr = NULL;
-  int match_count = 0;
-  for (size_t first_index = 0, second_index = 0; first_index < first_ngramm_list.size() && second_index < second_ngramm_list.size(); ) {
-    if (first_ngramm_list[first_index] < second_ngramm_list[second_index]) {
-      ++first_index;
-    } else if (first_ngramm_list[first_index] > second_ngramm_list[second_index]) {
-      ++second_index;
-    } else {
-      if (last_passed_ngramm_ptr == NULL ||
-          *last_passed_ngramm_ptr != first_ngramm_list[first_index]) {
-        ++match_count; 
-      }
-      last_passed_ngramm_ptr = &first_ngramm_list[first_index];
-      ++first_index;
-      ++second_index;
-    }
-  }
-  return 1.0 - (2.0 * match_count) / (first_ngramm_list.size() + second_ngramm_list.size());
+  vector<string> intersection_result(min(first_ngramm_list.size(),
+                                         second_ngramm_list.size()));
+  int intersection_count =
+      set_intersection(first_ngramm_list.begin(),
+                       first_ngramm_list.end(),
+                       second_ngramm_list.begin(),
+                       second_ngramm_list.end(),
+                      intersection_result.begin()) -
+      intersection_result.begin();
+  
+  vector<string> union_result(first_ngramm_list.size() +
+                              second_ngramm_list.size());
+  int union_count =
+      set_union(first_ngramm_list.begin(),
+                first_ngramm_list.end(),
+                second_ngramm_list.begin(),
+                second_ngramm_list.end(),
+                union_result.begin()) -
+      union_result.begin();
+
+  return 1.0 - 1.0 * intersection_count / union_count;
 }
 
+
+double get_ngramm_dice_distance(
+    const string& first_line,
+    const string& second_line,
+    int ngramm_length) {
+  vector<string> first_ngramm_list;
+  make_ngrams(first_line, back_inserter(first_ngramm_list), ngramm_length);
+  sort(first_ngramm_list.begin(), first_ngramm_list.end());
+
+  vector<string> second_ngramm_list;
+  make_ngrams(second_line, back_inserter(second_ngramm_list), ngramm_length);
+  sort(second_ngramm_list.begin(), second_ngramm_list.end());
+
+  if (first_ngramm_list.size() == 0 || second_ngramm_list.size() == 0) {
+    return 1.0;
+  }
+
+  vector<string> intersection_result(min(first_ngramm_list.size(),
+                                         second_ngramm_list.size()));
+  int intersection_count =
+      set_intersection(first_ngramm_list.begin(),
+                       first_ngramm_list.end(),
+                       second_ngramm_list.begin(),
+                       second_ngramm_list.end(),
+                      intersection_result.begin()) -
+      intersection_result.begin();
+
+  return 1.0 - 2.0 * intersection_count /
+      (first_ngramm_list.size() + second_ngramm_list.size());
+}
