@@ -5,7 +5,7 @@
 
 class IDictionary {
  public:
-  virtual void LoadFromFile(const std::string& filename) {};
+  virtual void LoadFromFile(const std::string& filename) = 0;
   virtual void LoadFromCollection(const std::vector<std::string>& collection) {};
   
   virtual void AddWord(const std::string& word) {};

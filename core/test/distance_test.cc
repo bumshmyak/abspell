@@ -16,10 +16,6 @@ int lev(const string& lhs, const string& rhs, int max_distance = 0) {
   return get_levenshtein_distance(lhs, rhs, max_distance);
 }
 
-bool eps_eq(double a, double b, double EPS = 1e-7) {
-  return fabs(a - b) < EPS;
-}
-
 TEST(DistanceMetrics,Levenshtein) {
   EXPECT_EQ(0, lev("abcdef", "abcdef", 3));
 
@@ -58,8 +54,8 @@ TEST(DistanceMetrics,NGrammBased) {
   EXPECT_EQ(0, get_ngramm_jaccard_distance("abc", "abc"));
   EXPECT_EQ(0, get_ngramm_dice_distance("abc", "abc"));
   
-  EXPECT_TRUE(eps_eq(1.0 - 2.0 / 5, get_ngramm_jaccard_distance("abc", "bc")));
-  EXPECT_TRUE(eps_eq(1.0 - 4.0 / 7, get_ngramm_dice_distance("abc", "bc")));
+  EXPECT_DOUBLE_EQ(1.0 - 2.0 / 5, get_ngramm_jaccard_distance("abc", "bc"));
+  EXPECT_DOUBLE_EQ(1.0 - 4.0 / 7, get_ngramm_dice_distance("abc", "bc"));
   
   EXPECT_EQ(1.0, get_ngramm_jaccard_distance("", ""));
   EXPECT_EQ(1.0, get_ngramm_dice_distance("", ""));
