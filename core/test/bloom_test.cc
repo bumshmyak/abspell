@@ -10,13 +10,13 @@ TEST(bloom_filter_Test,StoreStrings) {
   filter.add("morning");
   filter.add("night");
 
-  EXPECT_EQ(filter.find("hello"), true);
-  EXPECT_EQ(filter.find("apple"), true);
-  EXPECT_EQ(filter.find("morning"), true);
-  EXPECT_EQ(filter.find("night"), true);
+  EXPECT_EQ(true, filter.find("hello"));
+  EXPECT_EQ(true, filter.find("apple"));
+  EXPECT_EQ(true, filter.find("morning"));
+  EXPECT_EQ(true, filter.find("night"));
   
-  EXPECT_EQ(filter.find("helloo"), false);
-  EXPECT_EQ(filter.find("applle"), false);
-  EXPECT_EQ(filter.find("moning"), false);
-  EXPECT_EQ(filter.find("nait"), false);
+  EXPECT_EQ(true, filter.find("helloo"));
+  EXPECT_EQ(true, filter.find("applle"));
+  EXPECT_EQ(true, filter.find("moning"));
+  EXPECT_EQ(true, filter.find("nait"));
 }
