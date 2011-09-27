@@ -25,6 +25,10 @@ void THashDictionary::LoadFromFile(const std::string& filename) {
   
 void THashDictionary::AddWord(const std::string& word) {
   ++dict_[word];
+  ++total_frequency_;
+  if (dict_[word] == 1) {
+    ++total_count_;
+  }
 }
 
 size_t THashDictionary::GetWordFrequency(const std::string& word) const {

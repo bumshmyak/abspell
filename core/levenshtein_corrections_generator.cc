@@ -34,5 +34,68 @@ void LevenshteinWordCandidatesGenerator::GetCandidates(
   }
 }
 
+void SimpleLevenshteinWordCandidatesGenerator::GetCandidates(
+    const string& word,
+    vector<CorrectionCandidate>& candidates,
+    double threshold) const {
 
+  // !!! Hack, must be replaced with normal probability
+  // based on real distance
+  const double CANDIDATE_PROBABILITY = 0.1;
+  vector<CorrectionCandidate> precandidates;
+
+  precandidates.push_back(CorrectionCandidate(word, CANDIDATE_PROBABILITY));
+
+  if (operations_mask_ & ENABLE_CHANGE) {
+    for (int i = 0; i < word.size(); ++i) {
+      for (char c = 'a'; c <= 'z'; ++c) {
+        if (word[i] != c) {
+          precandidates.push_back(
+              CorrectionCandidate(word.substr(0, i) + c + word.substr(i + 1),
+                                  CANDIDATE_PROBABILITY));
+        }
+      }
+    }	
+  }
+
+  if (operations_mask_ & ENABLE_INSERT) {
+    for (int i = 0; i <= word.size(); ++i) {
+      for (char c = 'a'; c <= 'z'; ++c) {
+        precandidates.push_back(
+            CorrectionCandidate(word.substr(0, i) + c + word.substr(i),
+                                CANDIDATE_PROBABILITY));
+      }
+    }	
+  }
+
+  if (operations_mask_ & ENABLE_SWAP) {
+    for (int i = 0; i + 1 < word.size(); ++i) {
+      if (word[i] != word[i + 1]) {
+        precandidates.push_back(
+            CorrectionCandidate(word.substr(0, i) +
+                                word[i + 1] +
+                                word[i] + 
+                                word.substr(i + 2),
+                                CANDIDATE_PROBABILITY));
+      }
+    }	
+  }
+
+  if (operations_mask_ & ENABLE_DELETE) {
+    for (int i = 0; i < word.size(); ++i) {
+      precandidates.push_back(
+          CorrectionCandidate(word.substr(0, i) + word.substr(i + 1),
+                              CANDIDATE_PROBABILITY));
+    }	
+  }
+
+  for (int i = 0; i < precandidates.size(); ++i) {
+    if (dictionary_.GetWordFrequency(precandidates[i].text_) != 0) {
+      candidates.push_back(precandidates[i]);
+      candidates.back().weight_ *= dictionary_.GetWordFrequency(precandidates[i].text_);
+    }
+  }
+  
+  sort(candidates.rbegin(), candidates.rend());
+}
 

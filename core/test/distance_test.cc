@@ -9,6 +9,8 @@
 #include <cmath>
 
 #include <distance.h>
+#include <hash_based_dictionary.h>
+#include <levenshtein_corrections_generator.h>
 
 using std::string;
 
@@ -16,7 +18,7 @@ int lev(const string& lhs, const string& rhs, int max_distance = 0) {
   return get_levenshtein_distance(lhs, rhs, max_distance);
 }
 
-TEST(DistanceMetrics,Levenshtein) {
+TEST(DistanceMetrics, Levenshtein) {
   EXPECT_EQ(0, lev("abcdef", "abcdef", 3));
 
   EXPECT_EQ(1, lev("abcdef", "bbcdef", 3));
@@ -50,7 +52,23 @@ TEST(DistanceMetrics,Levenshtein) {
   EXPECT_EQ(101, lev(string(100, 'a'), string(101, 'c'), 3));
 }
 
-TEST(DistanceMetrics,NGrammBased) {
+TEST(DistanceMetrics, SimpleLevenshtein) {
+  THashDictionary hash_dictionary;
+  hash_dictionary.AddWord("hel");      
+  hash_dictionary.AddWord("held");
+  hash_dictionary.AddWord("hal");
+  hash_dictionary.AddWord("he");
+  hash_dictionary.AddWord("hle");
+
+  SimpleLevenshteinWordCandidatesGenerator candidates_generator(
+      hash_dictionary);
+
+  vector<CorrectionCandidate> candidates;
+  candidates_generator.GetCandidates("hel", candidates, 1);
+  EXPECT_EQ(5, candidates.size());
+}
+
+TEST(DistanceMetrics, NGrammBased) {
   EXPECT_EQ(0, get_ngramm_jaccard_distance("abc", "abc"));
   EXPECT_EQ(0, get_ngramm_dice_distance("abc", "abc"));
   
