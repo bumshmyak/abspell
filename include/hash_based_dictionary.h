@@ -1,22 +1,22 @@
 #pragma once
-
 #include <using_std.h>
+
 #include <dictionary.h>
 #include <tr1/unordered_map>
 
 class THashDictionary :
     public IDictionary {
  public:
+  THashDictionary() :
+      total_count_(0),
+      total_frequency_(0)
+  { }
+  // currently can load only in format of 500k_wordlist_coca_orig
   virtual void LoadFromFile(const std::string& filename);
-  
-  virtual void LoadFromCollection(const std::vector<std::string>& collection) {};
-  
-  virtual void AddWord(const std::string& word);
-  virtual void RemoveWord(const std::string& word) {};
+  virtual void AddWord(const std::string& word, size_t frequency = 1);
   virtual size_t GetWordFrequency(const std::string& word) const;
-  virtual size_t GetSize() const;
-  virtual void GetNeighbourWords(const std::string& word,
-                                 vector<string>* suggestions_ptr) const;
+  virtual size_t GetTotalFrequency() const;
+  virtual size_t GetTotalWordCount() const;
  private:
   std::tr1::unordered_map<string, int> dict_;
   size_t total_count_;

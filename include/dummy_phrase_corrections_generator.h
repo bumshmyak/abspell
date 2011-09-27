@@ -1,11 +1,9 @@
 /*!
  *  Split phrase into words, replace each word with its most probable correction
  */
-
+#pragma once
 #include <using_std.h>
-
 #include <boost/algorithm/string.hpp>
-
 #include <corrections_generator.h>
 
 class BestWordPhraseCandidatesGenerator {

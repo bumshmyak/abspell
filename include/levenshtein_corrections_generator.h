@@ -1,6 +1,4 @@
-#ifndef _ABSPELL_LEVENSHTEIN_CORRECTIONS_GENERATOR_
-#define _ABSPELL_LEVENSHTEIN_CORRECTIONS_GENERATOR_
-
+#pragma once
 #include <string>
 #include <vector>
 
@@ -12,7 +10,7 @@ class LevenshteinWordCandidatesGenerator :
  
  public:
   explicit LevenshteinWordCandidatesGenerator(
-      const IDictionary& dictionary)  
+      const ISuggestingDictionary& dictionary)  
       : dictionary_(dictionary) {
   }
 
@@ -22,7 +20,7 @@ class LevenshteinWordCandidatesGenerator :
       double threshold) const;
     
  private:
-  const IDictionary& dictionary_;
+  const ISuggestingDictionary& dictionary_;
 };
 
 
@@ -54,6 +52,3 @@ class SimpleLevenshteinWordCandidatesGenerator :
   const IDictionary& dictionary_;
   size_t operations_mask_;
 };
-
-
-#endif  // _ABSPELL_LEVENSHTEIN_CORRECTIONS_GENERATOR_

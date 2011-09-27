@@ -1,6 +1,4 @@
-#ifndef _ABSPELL_CORRECTIONS_GENERATOR_H_
-#define _ABSPELL_CORRECTIONS_GENERATOR_H_
-
+#pragma once
 #include <string>
 #include <vector>
 
@@ -48,4 +46,3 @@ class IPhraseCandidatesGenerator {
   virtual ~IPhraseCandidatesGenerator() {};
 };
 
-#endif  // _ABSPELL_CORRECTORIONS_GENERATOR_H_
