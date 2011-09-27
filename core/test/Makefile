@@ -12,13 +12,17 @@ LDFLAGS += -Wl,-rpath=$(INSTALL_LIB_PATH)
 
 CXXFLAGS += -I$(GTEST_INCLUDE_PATH)
 
+
+.PHONY: all clean check
+
+all : $(OUTPUT_BIN_DIR)/$(TARGET)
+
 $(OUTPUT_BIN_DIR)/$(TARGET) : $(OUTPUT_BIN_DIR) $(SOURCES) $(HEADERS)
 	$(CXX) -o $(OUTPUT_BIN_DIR)/$(TARGET) $(LDFLAGS) $(CXXFLAGS) $(SOURCES)
 
 $(OUTPUT_BIN_DIR) : 
 	mkdir $(OUTPUT_BIN_DIR)
 
-.PHONY: clean check
 clean :
 	rm -rf $(OUTPUT_BIN_DIR)
 

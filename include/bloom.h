@@ -29,7 +29,7 @@ class bloom_filter {
   bool find(const string& text) const {
     const int mask[] = {0x01, 0x02, 0x04, 0x08,0x10,0x20,0x40,0x80};
     for (int id = 0; id < 8; ++id) {
-      if(0x00 == data_[get_hash(text, id) % data_.size()] & mask[id]) {
+      if(0x00 == (data_[get_hash(text, id) % data_.size()] & mask[id])) {
         return false;
       }
     } 

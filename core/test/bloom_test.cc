@@ -15,8 +15,8 @@ TEST(bloom_filter_Test,StoreStrings) {
   EXPECT_EQ(true, filter.find("morning"));
   EXPECT_EQ(true, filter.find("night"));
   
-  EXPECT_EQ(true, filter.find("helloo"));
-  EXPECT_EQ(true, filter.find("applle"));
-  EXPECT_EQ(true, filter.find("moning"));
-  EXPECT_EQ(true, filter.find("nait"));
+  EXPECT_NE(true, filter.find("helloo"));
+  EXPECT_NE(true, filter.find("applle"));
+  EXPECT_NE(true, filter.find("moning"));
+  EXPECT_NE(true, filter.find("nait"));
 }

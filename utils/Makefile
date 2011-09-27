@@ -6,7 +6,7 @@ LDFLAGS += -Wl,-rpath=$(INSTALL_LIB_PATH)
 
 HEADERS = $(INCLUDES_PATH)/*.h
 
-.PHONY: clean all 
+.PHONY: check clean all 
 
 all: stats dict-search best_word_corrector
 
@@ -21,3 +21,6 @@ best_word_corrector: best_word_corrector.cc $(HEADERS)
 
 clean:
 	rm -f stats dict-search best_word_corrector
+
+check:
+
