@@ -1,0 +1,6 @@
+single variant data for profiling
+
+simple.baseline.txt - baseline result 
+simple.data.txt - phrase text only
+simple.ideal.txt - 100% acuracy result
+simple.learn.txt - sliced learn data
