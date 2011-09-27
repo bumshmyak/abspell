@@ -22,7 +22,10 @@ T min(const T& a, const T& b, const T& c) {
   return min(a, min(b,c));
 }
 
-int get_levenshtein_distance(const string& first_line, const string& second_line, int max_distance) {
+int get_levenshtein_distance(
+    const string& first_line,
+    const string& second_line,
+    int max_distance) {
   int max_value = first_line.size() + second_line.size();
   if (max_distance <= 0) {
     max_distance = max_value;
@@ -34,11 +37,23 @@ int get_levenshtein_distance(const string& first_line, const string& second_line
   }
 
   for (int second_index = 0; second_index < second_line.size(); ++second_index) {
-    for (int first_index = max(0, second_index - max_distance); first_index < first_line.size() && first_index < second_index + max_distance + 1; ++first_index) {
+    for (
+        int first_index = max(0, second_index - max_distance);
+        first_index < first_line.size() &&
+          first_index < second_index + max_distance + 1;
+        ++first_index) {
       if (first_index == 0) {
-        new_front[first_index] = min(second_index + 1, front[first_index] + 1, second_index + (first_line[first_index] == second_line[second_index] ? 0 : 1));
+        new_front[first_index] = min(
+            second_index + 1,
+            front[first_index] + 1,
+            second_index +
+              (first_line[first_index] == second_line[second_index] ? 0 : 1));
       } else {
-        new_front[first_index] = min(new_front[first_index - 1] + 1, front[first_index] + 1, front[first_index - 1] + (first_line[first_index] == second_line[second_index] ? 0 : 1));
+        new_front[first_index] = min(
+            new_front[first_index - 1] + 1,
+            front[first_index] + 1,
+            front[first_index - 1] +
+              (first_line[first_index] == second_line[second_index] ? 0 : 1));
       }
     }
     front.swap(new_front);
