@@ -1,1 +1,9 @@
 Amazing Bathrooms Spellchecker
+
+
+
+To run levenshtein word corrector on set of on veriant phrases:
+    time cat ./data/preprocessed/simple.data.txt | LD_LIBRARY_PATH=/home/gerich/coding/speller/abspell/lib ./utils/best_word_corrector ./data/10k-freq.dat  > ./data/preprocessed/simple.ans_04.txt
+
+To calc ocuracy:
+    ./utils/evaluate.py ./data/preprocessed/simple.learn.txt ./data/preprocessed/simple.ans_04.txt
