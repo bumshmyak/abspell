@@ -10,7 +10,7 @@ void THashDictionary::LoadFromFile(const std::string& filename) {
   while (getline(in, line)) {
     vector<string> fields;
     boost::split(fields, line, boost::is_any_of("\t"));
-    if (fields.size() != 4) {
+    if (fields.size() < 2) {
       continue;
     }
     

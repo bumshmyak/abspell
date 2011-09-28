@@ -13,13 +13,13 @@ TEST(DictionaryTest, HashBased) {
   
   bool open_file_exception_happens = false;
   try {
-    hash_dictionary.LoadFromFile("../../data/top1000_wordlist_coca.dat");
+    hash_dictionary.LoadFromFile("../../data/dict/40k-freq.dat");
   } catch(const std::runtime_error& e) {
     open_file_exception_happens = true;
   }
   ASSERT_FALSE(open_file_exception_happens);
 
-  // LE cause one word can by metioned multiple times in the file as
+  // LE cause one word can by mentioned multiple times in the file as
   // different part of speech
   EXPECT_LE(22995878, hash_dictionary.GetWordFrequency("the"));
   EXPECT_LE(9247774, hash_dictionary.GetWordFrequency("a"));
