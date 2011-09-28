@@ -1,0 +1,61 @@
+Here i collect typical errors that we can't correct at the moment.
+
+Format:
+query
+our correction variant
+correct variant
+Analyses
+
+Примеры где поможет настройка штрафов Левенштейна.
+collonade
+[(1.0, u'collonade')]
+set([u'colonnade'])
+
+chemicaly
+[(1.0, u'chemical')]
+set([u'chemically'])
+
+nucular
+[(1.0, u'nucular')]
+set([u'nuclear'])
+
+Не надо править окончания, число.
+ancestory
+[(1.0, u'ancestors')]
+set([u'ancestry'])
+До обоих расстояние 1, u'ancestors' в нашем словаре чаще. Надо сохранять окончания.
+
+Имена собственные, непонятно как тут быть.
+hee haw
+[(1.0, u'he haw')]
+set([u'hee haw'])
+---
+paula dean
+[(1.0, u'paula dean')]
+set([u'paula deen'])
+
+
+miami dade propert taxes
+[(1.0, u'miami dade property taxes')]
+set([u'miami dade property tax'])
+Странное исправление, наше совпадает и с гуглом и яндексом
+
+
+Отделяют конечное s:
+zaxbys
+[(1.0, u'zaxbys')]
+set([u'zaxby s'])
+
+how to calculate an inmates earliest release date
+[(1.0, u'how to calculate an inmates earliest release date')]
+set([u'how to calculate an inmate s earliest release date'])
+
+Попадаем в редкие слова:
+paul steigerwald
+[(1.0, u'paul steigerwalt')]
+set([u'paul steigerwald'])
+
+Часто путают какую букву нужно удвоить.
+embezelled
+[(1.0, u'embezelled')]
+set([u'embezzled'])

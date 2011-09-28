@@ -1,12 +1,11 @@
 single variant data for profiling
 
-simple.learn.dat - sliced learn data
+full.learn.dat - same as ../original/Spelling.Learn.dat
+simple.learn.dat - sliced learn data with one correction variant
 simple.learn.oneword.dat - only one word phrases from simple.learn.dat
 simple.learn.oneword.300.dat - 300 samples from simple.learn.oneword.dat
 
-simple.data.dat - first column only from simple.learn.dat
-simple.data.oneword.dat - first column only from simple.learn.oneword.dat
-simple.data.oneword.300.dat - first column only from simple.learn.oneword.300.dat
+*.data.*.dat - first column only from *.learn.*.dat
 
 simple.result.baseline.dat - baseline result on simple.data.dat
 simple.result.ideal.dat - 100% acuracy result on simple.data.dat

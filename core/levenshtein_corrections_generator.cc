@@ -47,61 +47,77 @@ void SimpleLevenshteinWordCandidatesGenerator::GetCandidates(
     const string& word,
     vector<CorrectionCandidate>& candidates,
     double threshold) const {
+  // evristics:
+  // don't correct words with non alphabetic symbols
+  // each operation has different cost
+  // don't modify first letter of the word
+  // don't change or delete last letter of the word
+  // tune tradeof between word frequency and levenshtein distance
+  // it's not expensive to merge doubled letter or to split one letter in two
 
-  // !!! Hack, must be replaced with normal probability
-  // based on real distance
-  const double CANDIDATE_PROBABILITY = 0.1;
+  double change_coef = 1.1;
+  double doubling_coef = 0.4;
+  double levenshtein_coef = 11.5;
+  
+  for (int i = 0; i < word.size(); ++i) {
+    if (word[i] < 'a' || word[i] > 'z') {
+      candidates.push_back(CorrectionCandidate(word, 1));
+      return;
+    }
+  }
+  
   vector<CorrectionCandidate> precandidates;
 
-  precandidates.push_back(CorrectionCandidate(word, CANDIDATE_PROBABILITY));
+  precandidates.push_back(CorrectionCandidate(word, 0));
 
   if (operations_mask_ & ENABLE_CHANGE) {
-    for (int i = 0; i < word.size(); ++i) {
+    for (int i = 1; i + 1 < word.size(); ++i) {
       for (char c = 'a'; c <= 'z'; ++c) {
         if (word[i] != c) {
           precandidates.push_back(
-              CorrectionCandidate(word.substr(0, i) + c + word.substr(i + 1),
-                                  CANDIDATE_PROBABILITY));
+              CorrectionCandidate(word.substr(0, i) + c + word.substr(i + 1), change_coef));
         }
       }
     }	
   }
 
   if (operations_mask_ & ENABLE_INSERT) {
-    for (int i = 0; i <= word.size(); ++i) {
+    for (int i = 1; i <= word.size(); ++i) {
       for (char c = 'a'; c <= 'z'; ++c) {
+        double d = (c == word[i]) ? doubling_coef : 1;
         precandidates.push_back(
-            CorrectionCandidate(word.substr(0, i) + c + word.substr(i),
-                                CANDIDATE_PROBABILITY));
+            CorrectionCandidate(word.substr(0, i) + c + word.substr(i), d));
       }
     }	
   }
 
   if (operations_mask_ & ENABLE_SWAP) {
-    for (int i = 0; i + 1 < word.size(); ++i) {
+    for (int i = 1; i + 1 < word.size(); ++i) {
       if (word[i] != word[i + 1]) {
         precandidates.push_back(
             CorrectionCandidate(word.substr(0, i) +
                                 word[i + 1] +
                                 word[i] + 
                                 word.substr(i + 2),
-                                CANDIDATE_PROBABILITY));
+                                1));
       }
     }	
   }
 
   if (operations_mask_ & ENABLE_DELETE) {
-    for (int i = 0; i < word.size(); ++i) {
+    for (int i = 1; i + 1 < word.size(); ++i) {
+      double d = (word[i] == word[i + 1]) ? doubling_coef : 1;
       precandidates.push_back(
-          CorrectionCandidate(word.substr(0, i) + word.substr(i + 1),
-                              CANDIDATE_PROBABILITY));
+          CorrectionCandidate(word.substr(0, i) + word.substr(i + 1), d));
     }	
   }
 
   for (int i = 0; i < precandidates.size(); ++i) {
     if (dictionary_.GetWordFrequency(precandidates[i].text_) != 0) {
       candidates.push_back(precandidates[i]);
-      candidates.back().weight_ *= dictionary_.GetWordFrequency(precandidates[i].text_);
+      candidates.back().weight_ =
+          log(dictionary_.GetWordFrequency(precandidates[i].text_) + 1) -
+          levenshtein_coef * candidates.back().weight_;
     }
   }
   
