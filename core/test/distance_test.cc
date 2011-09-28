@@ -65,7 +65,7 @@ TEST(DistanceMetrics, SimpleLevenshtein) {
 
   vector<CorrectionCandidate> candidates;
   candidates_generator.GetCandidates("hel", candidates, 1);
-  EXPECT_EQ(5, candidates.size());
+  EXPECT_EQ(4, candidates.size());
 }
 
 TEST(DistanceMetrics, NGrammBased) {
@@ -82,3 +82,14 @@ TEST(DistanceMetrics, NGrammBased) {
   EXPECT_EQ(1.0, get_ngramm_dice_distance("", "anything"));
 }
 
+TEST(DistanceMetrics, QwertyKeybordDistance) {
+  EXPECT_EQ(0, get_qwerty_keybord_distance('d', 'd'));
+  EXPECT_EQ(1, get_qwerty_keybord_distance('d', 's'));
+  EXPECT_EQ(1, get_qwerty_keybord_distance('d', 'f'));
+  EXPECT_EQ(1, get_qwerty_keybord_distance('d', 'e'));
+  EXPECT_EQ(1, get_qwerty_keybord_distance('d', 'c'));
+  EXPECT_EQ(2, get_qwerty_keybord_distance('d', 'w'));
+  EXPECT_EQ(2, get_qwerty_keybord_distance('d', 'r'));
+  EXPECT_EQ(2, get_qwerty_keybord_distance('d', 'x'));
+  EXPECT_EQ(2, get_qwerty_keybord_distance('d', 'v'));                        
+}

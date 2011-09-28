@@ -15,6 +15,8 @@ class IDictionary {
 class ISuggestingDictionary :
     public IDictionary {
  public:
-  virtual void GetNeighbourWords(const std::string& word, vector<string>* suggestions_ptr) const = 0;
+  virtual void GetNeighbourWords(
+      const std::string& word,
+      vector<string>* suggestions_ptr) const = 0;
   virtual ~ISuggestingDictionary() {};
 };

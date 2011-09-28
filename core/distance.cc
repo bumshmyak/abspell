@@ -1,5 +1,10 @@
 #include <using_std.h>
 #include <cmath>
+#include <cassert>
+#include <utility>
+#include <cstring>
+
+using std::pair;
 
 struct TTraversalPosition {
   TTraversalPosition() 
@@ -145,4 +150,32 @@ double get_ngramm_dice_distance(
 
   return 1.0 - 2.0 * intersection_count /
       (first_ngramm_list.size() + second_ngramm_list.size());
+}
+
+const char* qwerty_map[] = {
+  "`1234567890-=",
+  "qwertyuiop[]\\",
+  "asdfghjkl;'",
+  "zxcvbnm,./" };
+
+pair<int, int> find_char_at_qwerty(char c) {
+  for (int row = 0; row < 4; ++row) {
+    for (int col = 0; col < strlen(qwerty_map[row]); ++col) {
+      if (qwerty_map[row][col] == c) {
+        return std::make_pair(row, col);
+      }
+    }
+  }
+  return std::make_pair(-1, -1);
+}
+
+int get_qwerty_keybord_distance(
+    char first,
+    char second) {
+  pair<int, int> first_pos = find_char_at_qwerty(first);
+  pair<int, int> second_pos = find_char_at_qwerty(second);
+  assert(first_pos.first != -1);
+  assert(second_pos.first != -1);
+  return abs(first_pos.first - second_pos.first) +
+      abs(first_pos.second - second_pos.second);
 }

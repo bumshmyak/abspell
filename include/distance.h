@@ -19,5 +19,10 @@ double get_ngramm_dice_distance(
     const string& second_line,
     int ngramm_length = 2);
 
+int get_qwerty_keybord_distance(
+    char first,
+    char second);
+
+
 
 
