@@ -31,6 +31,13 @@ int get_levenshtein_distance(
     const string& first_line,
     const string& second_line,
     int max_distance) {
+
+  static const int INSERT_COST = 1;
+  static const int REPLACE_COST = 1;
+  static const int TRANSPOSE_COST = 1; // must be >= REPLACE_COST
+  static const int MISS_COST = 1;
+
+
   int max_value = first_line.size() + second_line.size();
   if (max_distance <= 0) {
     max_distance = max_value;
@@ -38,7 +45,7 @@ int get_levenshtein_distance(
   vector<int> front(first_line.size(), max_value);
   vector<int> new_front(first_line.size(), max_value);
   for (int i = 0; i < front.size(); ++i) {
-    front[i] = i + 1;
+    front[i] = (i + 1) * MISS_COST;
   }
 
   for (int second_index = 0; second_index < second_line.size(); ++second_index) {
@@ -49,16 +56,23 @@ int get_levenshtein_distance(
         ++first_index) {
       if (first_index == 0) {
         new_front[first_index] = min(
-            second_index + 1,
-            front[first_index] + 1,
-            second_index +
-              (first_line[first_index] == second_line[second_index] ? 0 : 1));
+            (second_index + 1) * MISS_COST,
+            front[first_index] + INSERT_COST,
+            second_index * MISS_COST +
+              (first_line[first_index] == second_line[second_index] ? 0 : REPLACE_COST));
       } else {
         new_front[first_index] = min(
-            new_front[first_index - 1] + 1,
-            front[first_index] + 1,
+            new_front[first_index - 1] + MISS_COST,
+            front[first_index] + INSERT_COST,
             front[first_index - 1] +
-              (first_line[first_index] == second_line[second_index] ? 0 : 1));
+              (first_line[first_index] == second_line[second_index] ?
+                0 :
+                REPLACE_COST + (
+                  second_index > 0 &&
+                  first_line[first_index - 1] == second_line[second_index] &&
+                  first_line[first_index] == second_line[second_index - 1] ?
+                    TRANSPOSE_COST - 2 * REPLACE_COST :
+                    0)));
       }
     }
     front.swap(new_front);

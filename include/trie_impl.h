@@ -61,6 +61,11 @@ size_t TTrieNode<TData>::get_depth() const {
   return depth_;
 }
 
+template <typename TData>
+char TTrieNode<TData>::get_symbol() const {
+  return symbol_;
+}
+
 /*---------------------Comparison operators for TFrontState<TData>-----------*/
 
 template <typename TData>
@@ -101,6 +106,11 @@ void TTrie<TData>::find_nearby(
     const string& text,
     TOutIterator out,
     int max_distance) const {
+  static const int INSERT_COST = 1;
+  static const int REPLACE_COST = 1;
+  static const int TRANSPOSE_COST = 1; // must be >= REPLACE_COST
+  static const int MISS_COST = 1;
+  
   //set<TState> front;
   vector<TState> front;
   //front.insert(TState(0, 0, 0));
@@ -125,8 +135,8 @@ void TTrie<TData>::find_nearby(
       }
 
       if (state.cost_ + 1 <= max_distance) {
-        new_front.push_back(TState(state.index_ + 1, state.cost_ + 1, state.node_id_));
-        //new_front.insert(TState(state.index_ + 1, state.cost_ + 1, state.node_id_));
+        new_front.push_back(TState(state.index_ + 1, state.cost_ + MISS_COST, state.node_id_));
+        //new_front.insert(TState(state.index_ + 1, state.cost_ + MISS_COST, state.node_id_));
       }
       
       if (state.index_ < text.size()) {
@@ -134,7 +144,16 @@ void TTrie<TData>::find_nearby(
             node_storage_[state.node_id_].get_children();
         typedef typename TTrieNode<TData>::TChildrenMap::const_iterator TIt;
         for (TIt it = children.begin(); it != children.end(); ++it) {
-          int delta_cost = it->first == text[state.index_] ? 0 : 1;
+          int delta_cost;
+          if (it->first == text[state.index_]) {
+            delta_cost = 0;
+          } else if (state.index_ > 0 &&
+              node_storage_[state.node_id_].get_symbol() == text[state.index_] &&
+              it->first == text[state.index_ - 1]) {
+            delta_cost = TRANSPOSE_COST - REPLACE_COST;
+          } else {
+            delta_cost = REPLACE_COST;
+          }
           if (state.cost_ + delta_cost <= max_distance) { 
             new_front.push_back(TState(state.index_ + 1, state.cost_ + delta_cost, it->second));
             //new_front.insert(TState(state.index_ + 1, state.cost_ + delta_cost, it->second));
@@ -149,8 +168,8 @@ void TTrie<TData>::find_nearby(
             node_storage_[state.node_id_].get_children();
         typedef typename TTrieNode<TData>::TChildrenMap::const_iterator TIt;
         for (TIt it = children.begin(); it != children.end(); ++it) {
-          burning_front.push_back(TState(state.index_, state.cost_ + 1, it->second));
-          //burning_front.insert(TState(state.index_, state.cost_ + 1, it->second));
+          burning_front.push_back(TState(state.index_, state.cost_ + INSERT_COST, it->second));
+          //burning_front.insert(TState(state.index_, state.cost_ + INSERT_COST, it->second));
         }
       }
 
@@ -190,7 +209,7 @@ bool TTrie<TData>::add(const string& text, const TData& data) {
 
       size_t next_node_id = node_storage_[current_node_id].find(text[index]);
       if (next_node_id == 0) {
-        node_storage_.push_back(TTrieNode<TData>());
+        node_storage_.push_back(TTrieNode<TData>(text[index], current_node_id));
         next_node_id = node_storage_.size() - 1;
         node_storage_[current_node_id].add_child(text[index], next_node_id);
       }

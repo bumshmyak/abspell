@@ -20,6 +20,11 @@ int lev(const string& lhs, const string& rhs, int max_distance = 0) {
 
 TEST(DistanceMetrics, Levenshtein) {
   EXPECT_EQ(0, lev("abcdef", "abcdef", 3));
+  
+  EXPECT_EQ(1, lev("abcdef", "acbdef", 3)); // transpose
+  EXPECT_EQ(1, lev("abcdef", "abdcef", 3)); // transpose
+  EXPECT_EQ(1, lev("abcdef", "abcedf", 3)); // transpose
+  EXPECT_EQ(1, lev("abcdef", "abcdfe", 3)); // transpose
 
   EXPECT_EQ(1, lev("abcdef", "bbcdef", 3));
   EXPECT_EQ(1, lev("abcdef", "bcdef", 3));

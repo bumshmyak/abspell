@@ -72,12 +72,21 @@ TEST(TTrie_Test,Add_or_Find_Test) {
     EXPECT_EQ(find_terms_in_trie(trie, "abcdefgh", 1), "11 12 13 14 15 16 17 18");
 
     trie.add("abacabaca", 20);
-    // neighbour transposition (eq double change)
+    // neighbour transposition
     EXPECT_EQ(find_terms_in_trie(trie, "abaacbaca", 0), "");
-    EXPECT_EQ(find_terms_in_trie(trie, "abaacbaca", 1), "");
+    EXPECT_EQ(find_terms_in_trie(trie, "abaacbaca", 1), "20");
     EXPECT_EQ(find_terms_in_trie(trie, "abaacbaca", 2), "20");
     EXPECT_EQ(find_terms_in_trie(trie, "abaacbaca", 3), "20");
     EXPECT_EQ(find_terms_in_trie(trie, "abaacbaca", 4), "20");
+    
+    EXPECT_EQ(find_terms_in_trie(trie, "baacabaca", 1), "20");
+    EXPECT_EQ(find_terms_in_trie(trie, "aabcabaca", 1), "20");
+    EXPECT_EQ(find_terms_in_trie(trie, "abcaabaca", 1), "20");
+    EXPECT_EQ(find_terms_in_trie(trie, "abaacbaca", 1), "20");
+    EXPECT_EQ(find_terms_in_trie(trie, "abacbaaca", 1), "20");
+    EXPECT_EQ(find_terms_in_trie(trie, "abacaabca", 1), "20");
+    EXPECT_EQ(find_terms_in_trie(trie, "abacabcaa", 1), "20");
+    EXPECT_EQ(find_terms_in_trie(trie, "abacabaac", 1), "20");
    
     // double change
     EXPECT_EQ(find_terms_in_trie(trie, "aBacabaCa", 0), "");

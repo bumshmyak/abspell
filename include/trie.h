@@ -12,15 +12,19 @@ class TTrieNode {
 public:
     typedef map<char, size_t> TChildrenMap;
 
-    TTrieNode()
-        : data_ptr_(NULL)
-        , depth_(0) {
+    TTrieNode(char symbol = '\0', size_t parent = 0)
+        : parent_(parent)
+        , data_ptr_(NULL)
+        , depth_(0)
+        , symbol_(symbol) {
     }
     
     TTrieNode(const TTrieNode<TData>& rhs)
         : children_(rhs.children_)
+        , parent_(rhs.parent_)
         , data_ptr_(auto_ptr<TData>(rhs.data_ptr_.get() ? new TData(*rhs.data_ptr_) : NULL))
-        , depth_(rhs.depth_) { 
+        , depth_(rhs.depth_)
+        , symbol_(rhs.symbol_) { 
     }
 
     void add_child(char symbol, size_t child_node_id);
@@ -41,10 +45,14 @@ public:
 
     size_t get_depth() const;
 
+    char get_symbol() const;
+
 private:
     TChildrenMap children_;
+    size_t parent_;
     auto_ptr<TData> data_ptr_;
     size_t depth_;
+    char symbol_;
 };
 
 
