@@ -7,7 +7,7 @@
 using std::pair;
 
 struct TTraversalPosition {
-  TTraversalPosition() 
+  TTraversalPosition()
     : position_first_(0)
     , position_second_(0)
     , distance_(0)
@@ -27,23 +27,26 @@ T min(const T& a, const T& b, const T& c) {
   return min(a, min(b,c));
 }
 
-int get_levenshtein_distance(
+template <typename T>
+T get_levenshtein_distance(
     const string& first_line,
     const string& second_line,
-    int max_distance) {
+    int max_distance,
+    const T* cost_matrix) {
 
-  static const int INSERT_COST = 1;
-  static const int REPLACE_COST = 1;
-  static const int TRANSPOSE_COST = 1; // must be >= REPLACE_COST
-  static const int MISS_COST = 1;
-
+  const T& DOUBLING_COST = cost_matrix[0];
+  const T& INSERT_COST = cost_matrix[1];
+  const T& MISS_COST = cost_matrix[2];
+  const T& REPLACE_COST = cost_matrix[3];
+  const T& TRANSPOSE_COST = cost_matrix[4];
+  const T& EDGE_FACTOR = cost_matrix[5];
 
   int max_value = first_line.size() + second_line.size();
   if (max_distance <= 0) {
     max_distance = max_value;
   }
-  vector<int> front(first_line.size(), max_value);
-  vector<int> new_front(first_line.size(), max_value);
+  vector<T> front(first_line.size(), max_value);
+  vector<T> new_front(first_line.size(), max_value);
   for (int i = 0; i < front.size(); ++i) {
     front[i] = (i + 1) * MISS_COST;
   }
@@ -54,31 +57,57 @@ int get_levenshtein_distance(
         first_index < first_line.size() &&
           first_index < second_index + max_distance + 1;
         ++first_index) {
+      T cost_factor = 1 + EDGE_FACTOR * exp(-1.5 * min(
+          min(first_index, second_index),
+          min<int>(first_line.size() - 1 - first_index,
+            second_line.size() - 1 - second_index)));
+
       if (first_index == 0) {
         new_front[first_index] = min(
-            (second_index + 1) * MISS_COST,
-            front[first_index] + INSERT_COST,
-            second_index * MISS_COST +
-              (first_line[first_index] == second_line[second_index] ? 0 : REPLACE_COST));
+            (second_index + 1) * MISS_COST * cost_factor,
+            front[first_index] + ((second_index > 0 && second_line[second_index] == second_line[second_index - 1]) ? DOUBLING_COST : INSERT_COST) * cost_factor,
+            second_index * MISS_COST * cost_factor +
+              (first_line[first_index] == second_line[second_index] ? 0 : REPLACE_COST * cost_factor));
       } else {
         new_front[first_index] = min(
-            new_front[first_index - 1] + MISS_COST,
-            front[first_index] + INSERT_COST,
+            new_front[first_index - 1] + ((first_line[first_index] == first_line[first_index - 1]) ? DOUBLING_COST : MISS_COST) * cost_factor,
+            front[first_index] + ((second_index > 0 && second_line[second_index] == second_line[second_index - 1]) ? DOUBLING_COST : INSERT_COST) * cost_factor,
             front[first_index - 1] +
               (first_line[first_index] == second_line[second_index] ?
                 0 :
-                REPLACE_COST + (
-                  second_index > 0 &&
+                ((second_index > 0 &&
                   first_line[first_index - 1] == second_line[second_index] &&
-                  first_line[first_index] == second_line[second_index - 1] ?
-                    TRANSPOSE_COST - 2 * REPLACE_COST :
-                    0)));
+                  first_line[first_index] == second_line[second_index - 1]) ?
+                    TRANSPOSE_COST - REPLACE_COST :
+                    REPLACE_COST) * cost_factor));
       }
     }
     front.swap(new_front);
   }
   return front.back();
 }
+
+double get_weighted_levenshtein_distance(
+    const string& first_line,
+    const string& second_line,
+    int max_distance,
+    const double* cost_matrix) {
+  const double default_cost_matrix[] = {1, 1, 1, 1, 1, 0};
+  if (cost_matrix == NULL) {
+    cost_matrix = default_cost_matrix;
+  }
+  return get_levenshtein_distance<double>(first_line, second_line, max_distance, cost_matrix);
+}
+
+int get_levenshtein_distance(
+    const string& first_line,
+    const string& second_line,
+    int max_distance) {
+  const int cost_matrix[] = {1, 1, 1, 1, 1, 0};
+  return get_levenshtein_distance<int>(first_line, second_line, max_distance, cost_matrix);
+}
+
+
 
 template <typename TOutIterator>
 void make_ngrams(const string& text, TOutIterator out, int ngramm_length = 2) {
@@ -121,7 +150,7 @@ double get_ngramm_jaccard_distance(
                        second_ngramm_list.end(),
                       intersection_result.begin()) -
       intersection_result.begin();
-  
+
   vector<string> union_result(first_ngramm_list.size() +
                               second_ngramm_list.size());
   int union_count =

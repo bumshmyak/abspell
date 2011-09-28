@@ -87,7 +87,7 @@ TEST(TTrie_Test,Add_or_Find_Test) {
     EXPECT_EQ(find_terms_in_trie(trie, "abacaabca", 1), "20");
     EXPECT_EQ(find_terms_in_trie(trie, "abacabcaa", 1), "20");
     EXPECT_EQ(find_terms_in_trie(trie, "abacabaac", 1), "20");
-   
+    
     // double change
     EXPECT_EQ(find_terms_in_trie(trie, "aBacabaCa", 0), "");
     EXPECT_EQ(find_terms_in_trie(trie, "aBacabaCa", 1), "");

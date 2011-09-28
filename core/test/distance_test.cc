@@ -15,12 +15,14 @@
 using std::string;
 
 int lev(const string& lhs, const string& rhs, int max_distance = 0) {
-  return get_levenshtein_distance(lhs, rhs, max_distance);
+  int result = get_levenshtein_distance(lhs, rhs, max_distance);
+  ASSERT_EQ(result, get_levenshtein_distance(rhs, lhs, max_distance));
+  return result;
 }
 
 TEST(DistanceMetrics, Levenshtein) {
   EXPECT_EQ(0, lev("abcdef", "abcdef", 3));
-  
+
   EXPECT_EQ(1, lev("abcdef", "acbdef", 3)); // transpose
   EXPECT_EQ(1, lev("abcdef", "abdcef", 3)); // transpose
   EXPECT_EQ(1, lev("abcdef", "abcedf", 3)); // transpose
@@ -35,7 +37,7 @@ TEST(DistanceMetrics, Levenshtein) {
   EXPECT_EQ(1, lev("abcdef", "abcde", 3));
 
   EXPECT_EQ(1, lev("aaaa", "aaaaa", 3));
-  
+
   EXPECT_EQ(0, lev("asjdioqdiqwhoqjdhfiojalfaslfjasklfjklasdfj",
                    "asjdioqdiqwhoqjdhfiojalfaslfjasklfjklasdfj"));
   EXPECT_EQ(3, lev("axsjdioqwdiqwhoqjhfiojalfaslfjasklfjklasdfj",
@@ -57,9 +59,37 @@ TEST(DistanceMetrics, Levenshtein) {
   EXPECT_EQ(101, lev(string(100, 'a'), string(101, 'c'), 3));
 }
 
+double wlev(const string& lhs, const string& rhs, int max_distance = 0) {
+  const double cost_matrix[] = {0.5, 1,1,1,1,0};
+  double result = 
+      get_weighted_levenshtein_distance(lhs, rhs, max_distance + 10, cost_matrix);
+  ASSERT_EQ(result,
+      get_weighted_levenshtein_distance(rhs, lhs, max_distance + 10, cost_matrix));
+  return result;
+}
+
+TEST(DistanceMetrics, WeightedLevenshtein) {
+  // doubling
+  EXPECT_DOUBLE_EQ(0.5, wlev("cinderella",
+                             "cinderela"));
+  EXPECT_DOUBLE_EQ(0.5, wlev("error",
+                             "eror"));
+  EXPECT_DOUBLE_EQ(0.5, wlev("upper",
+                             "uper"));
+ 
+  EXPECT_DOUBLE_EQ(0.5, wlev("apreciate",
+                             "appreciate"));
+  EXPECT_DOUBLE_EQ(0.5, wlev("umbrela",
+                             "umbrella"));
+  EXPECT_DOUBLE_EQ(0.5, wlev("emberasing",
+                             "emberrasing"));
+}
+
+
+
 TEST(DistanceMetrics, SimpleLevenshtein) {
   THashDictionary hash_dictionary;
-  hash_dictionary.AddWord("hel");      
+  hash_dictionary.AddWord("hel");
   hash_dictionary.AddWord("held");
   hash_dictionary.AddWord("hal");
   hash_dictionary.AddWord("he");
@@ -76,10 +106,10 @@ TEST(DistanceMetrics, SimpleLevenshtein) {
 TEST(DistanceMetrics, NGrammBased) {
   EXPECT_EQ(0, get_ngramm_jaccard_distance("abc", "abc"));
   EXPECT_EQ(0, get_ngramm_dice_distance("abc", "abc"));
-  
+
   EXPECT_DOUBLE_EQ(1.0 - 2.0 / 5, get_ngramm_jaccard_distance("abc", "bc"));
   EXPECT_DOUBLE_EQ(1.0 - 4.0 / 7, get_ngramm_dice_distance("abc", "bc"));
-  
+
   EXPECT_EQ(1.0, get_ngramm_jaccard_distance("", ""));
   EXPECT_EQ(1.0, get_ngramm_dice_distance("", ""));
 
@@ -96,5 +126,5 @@ TEST(DistanceMetrics, QwertyKeybordDistance) {
   EXPECT_EQ(2, get_qwerty_keybord_distance('d', 'w'));
   EXPECT_EQ(2, get_qwerty_keybord_distance('d', 'r'));
   EXPECT_EQ(2, get_qwerty_keybord_distance('d', 'x'));
-  EXPECT_EQ(2, get_qwerty_keybord_distance('d', 'v'));                        
+  EXPECT_EQ(2, get_qwerty_keybord_distance('d', 'v'));
 }

@@ -4,6 +4,8 @@
 #include <dummy_phrase_corrections_generator.h>
 #include <levenshtein_corrections_generator.h>
 
+#include <boost/shared_ptr.hpp>
+
 #include <using_std.h>
 
 int main(int argc, char** argv) {
@@ -12,14 +14,22 @@ int main(int argc, char** argv) {
     return 1;
   }
   
-  // TTrieDictionary dict;
-  THashDictionary dict;
-  dict.LoadFromFile(argv[1]);
-  //dict.SetMaxDistance(1);
+  boost::shared_ptr<ISuggestingDictionary> suggesting_dict_ptr;
+  boost::shared_ptr<IDictionary> dict_ptr;
+  boost::shared_ptr<IWordCandidatesGenerator> word_corrector_ptr;
 
-  // LevenshteinWordCandidatesGenerator word_corrector(dict);
-  SimpleLevenshteinWordCandidatesGenerator word_corrector(dict);  
-  BestWordPhraseCandidatesGenerator phrase_corrector(word_corrector);
+  if (argc >= 3 && string(argv[2]) == "trie" ) {
+    suggesting_dict_ptr.reset(new TTrieDictionary());
+    word_corrector_ptr.reset(new LevenshteinWordCandidatesGenerator(*suggesting_dict_ptr));
+    reinterpret_cast<TTrieDictionary*>(suggesting_dict_ptr.get())->SetMaxDistance(1);
+    suggesting_dict_ptr->LoadFromFile(argv[1]);
+  } else {
+    dict_ptr.reset(new THashDictionary());
+    word_corrector_ptr.reset(new SimpleLevenshteinWordCandidatesGenerator(*dict_ptr));
+    dict_ptr->LoadFromFile(argv[1]);
+  }
+
+  BestWordPhraseCandidatesGenerator phrase_corrector(*word_corrector_ptr);
 
   while (!cin.eof()) {
     string line;

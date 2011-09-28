@@ -4,6 +4,12 @@
 
 using std::string;
 
+double get_weighted_levenshtein_distance(
+    const string& first_line,
+    const string& second_line,
+    int max_distance = 0,
+    const double* cost_matrix = NULL);
+
 int get_levenshtein_distance(
     const string& first_line,
     const string& second_line,

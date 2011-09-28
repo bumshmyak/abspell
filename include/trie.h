@@ -18,13 +18,13 @@ public:
         , depth_(0)
         , symbol_(symbol) {
     }
-    
+
     TTrieNode(const TTrieNode<TData>& rhs)
         : children_(rhs.children_)
         , parent_(rhs.parent_)
         , data_ptr_(auto_ptr<TData>(rhs.data_ptr_.get() ? new TData(*rhs.data_ptr_) : NULL))
         , depth_(rhs.depth_)
-        , symbol_(rhs.symbol_) { 
+        , symbol_(rhs.symbol_) {
     }
 
     void add_child(char symbol, size_t child_node_id);
@@ -64,7 +64,7 @@ struct TFrontState {
         , node_id_(0) {
     }
 
-    TFrontState(int index, int cost, size_t node_id) 
+    TFrontState(int index, int cost, size_t node_id)
         : index_(index)
         , cost_(cost)
         , node_id_(node_id) {

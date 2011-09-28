@@ -1,6 +1,6 @@
 #ifdef TRIEE_IMPL_H
 /*---------------------TTrieNode<TData> implementation-----------------------*/
-    
+
 template <typename TData>
 void TTrieNode<TData>::add_child(char symbol, size_t child_node_id) {
   typedef typename map<char, size_t>::iterator TChildIterator;
@@ -75,7 +75,7 @@ bool operator == (const TFrontState<TData>& lhs, const TFrontState<TData>& rhs) 
 
 template <typename TData>
 bool operator < (const TFrontState<TData>& lhs, const TFrontState<TData>& rhs) {
-  return 
+  return
       (lhs.index_ < rhs.index_) ||
       (lhs.index_ == rhs.index_ && lhs.cost_ < rhs.cost_) ||
       (lhs.index_ == rhs.index_ && lhs.cost_ == rhs.cost_ && lhs.node_id_ < rhs.node_id_);
@@ -110,12 +110,12 @@ void TTrie<TData>::find_nearby(
   static const int REPLACE_COST = 1;
   static const int TRANSPOSE_COST = 1; // must be >= REPLACE_COST
   static const int MISS_COST = 1;
-  
+
   //set<TState> front;
   vector<TState> front;
   //front.insert(TState(0, 0, 0));
   front.push_back(TState(0, 0, 0));
-  
+
   vector<TData> found_nodes;
 
   while(!front.empty()) {
@@ -127,7 +127,7 @@ void TTrie<TData>::find_nearby(
       if (node_storage_[state.node_id_].is_acceptable() && state.index_ == text.size()) {
         found_nodes.push_back(node_storage_[state.node_id_].get_data());
       }
-    
+
       // stop traversing is there is no chance to reach accepted nodes withing given distance
       if (node_storage_[state.node_id_].get_depth() + max_distance < text.size() - state.index_) {
         front.pop_back();
@@ -138,7 +138,7 @@ void TTrie<TData>::find_nearby(
         new_front.push_back(TState(state.index_ + 1, state.cost_ + MISS_COST, state.node_id_));
         //new_front.insert(TState(state.index_ + 1, state.cost_ + MISS_COST, state.node_id_));
       }
-      
+
       if (state.index_ < text.size()) {
         const typename TTrieNode<TData>::TChildrenMap& children =
             node_storage_[state.node_id_].get_children();
@@ -154,13 +154,13 @@ void TTrie<TData>::find_nearby(
           } else {
             delta_cost = REPLACE_COST;
           }
-          if (state.cost_ + delta_cost <= max_distance) { 
+          if (state.cost_ + delta_cost <= max_distance) {
             new_front.push_back(TState(state.index_ + 1, state.cost_ + delta_cost, it->second));
             //new_front.insert(TState(state.index_ + 1, state.cost_ + delta_cost, it->second));
           }
         }
       }
-     
+
       //set<TState> burning_front;
       vector<TState> burning_front;
       if (state.cost_ + 1 <= max_distance) {
@@ -184,7 +184,7 @@ void TTrie<TData>::find_nearby(
     new_front.erase(
         unique(new_front.begin(), new_front.end()),
         new_front.end());
-    
+
     front.swap(new_front);
   }
 
@@ -194,7 +194,7 @@ void TTrie<TData>::find_nearby(
       unique_it = found_nodes.begin();
   for (; unique_it != unique_end; ++unique_it) {
     *out = *unique_it;
-    ++out;            
+    ++out;
   }
 }
 

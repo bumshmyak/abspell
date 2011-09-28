@@ -7,13 +7,27 @@
 using std::string;
 using std::vector;
 
+bool has_non_alphabetic_symbols(const string& word) {
+ for (int i = 0; i < word.size(); ++i) {
+    if (word[i] < 'a' || word[i] > 'z') {
+      return true;
+    }
+  }
+  return false;
+}
+
 void LevenshteinWordCandidatesGenerator::GetCandidates(
     const string& word,
     vector<CorrectionCandidate>& candidates,
     double threshold) const {
- 
-  // dont correct chort words 
-  if (word.size() < 8) {
+
+  // dont correct chort words
+  if (word.size() < 6) {
+    candidates.push_back(CorrectionCandidate(word, 1.0));
+    return;
+  }
+
+  if (has_non_alphabetic_symbols(word)) {
     candidates.push_back(CorrectionCandidate(word, 1.0));
     return;
   }
@@ -22,19 +36,20 @@ void LevenshteinWordCandidatesGenerator::GetCandidates(
   dictionary_.GetNeighbourWords(word, &candidate_words);
 
   vector<CorrectionCandidate> candidates_unsorted;
+  double cost_matrix[] = {0.45, 1.8, 1.8, 1.1, 0.8, 2.0};
   for (size_t index = 0; index < candidate_words.size(); ++index) {
     double levenshtein_distance =
-        get_levenshtein_distance(word, candidate_words[index], 10);
-    //double misspell_probability_ = 
-    //    0.15 - levenshtein_distance / max(word.size(), candidate_words[index].size()); 
-    
+        get_weighted_levenshtein_distance(word, candidate_words[index], 10, cost_matrix);
+    //double misspell_probability_ =
+    //    0.15 - levenshtein_distance / max(word.size(), candidate_words[index].size());
+
     double candidate_frequency_ =
         dictionary_.GetWordFrequency(candidate_words[index]);
-    
+
     candidates_unsorted.push_back(
         CorrectionCandidate(
           candidate_words[index],
-          log(candidate_frequency_ + 1.0) - 5.0 * levenshtein_distance));
+          log(candidate_frequency_ + 1.0) - 7.0 * levenshtein_distance));
   }
   sort(candidates_unsorted.begin(), candidates_unsorted.end());
 
@@ -58,14 +73,12 @@ void SimpleLevenshteinWordCandidatesGenerator::GetCandidates(
   double change_coef = 1.1;
   double doubling_coef = 0.4;
   double levenshtein_coef = 11.5;
-  
-  for (int i = 0; i < word.size(); ++i) {
-    if (word[i] < 'a' || word[i] > 'z') {
-      candidates.push_back(CorrectionCandidate(word, 1));
-      return;
-    }
+
+  if (has_non_alphabetic_symbols(word)) {
+    candidates.push_back(CorrectionCandidate(word, 1.0));
+    return;
   }
-  
+
   vector<CorrectionCandidate> precandidates;
 
   precandidates.push_back(CorrectionCandidate(word, 0));
@@ -97,7 +110,7 @@ void SimpleLevenshteinWordCandidatesGenerator::GetCandidates(
         precandidates.push_back(
             CorrectionCandidate(word.substr(0, i) +
                                 word[i + 1] +
-                                word[i] + 
+                                word[i] +
                                 word.substr(i + 2),
                                 1));
       }
@@ -120,7 +133,7 @@ void SimpleLevenshteinWordCandidatesGenerator::GetCandidates(
           levenshtein_coef * candidates.back().weight_;
     }
   }
-  
+
   sort(candidates.rbegin(), candidates.rend());
 }
 
