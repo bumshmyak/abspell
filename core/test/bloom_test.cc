@@ -1,4 +1,3 @@
-
 #include <gtest/gtest.h>
 #include <bloom.h>
 
@@ -10,13 +9,13 @@ TEST(bloom_filter_Test,StoreStrings) {
   filter.add("morning");
   filter.add("night");
 
-  EXPECT_EQ(true, filter.find("hello"));
-  EXPECT_EQ(true, filter.find("apple"));
-  EXPECT_EQ(true, filter.find("morning"));
-  EXPECT_EQ(true, filter.find("night"));
+  EXPECT_TRUE(filter.find("hello"));
+  EXPECT_TRUE(filter.find("apple"));
+  EXPECT_TRUE(filter.find("morning"));
+  EXPECT_TRUE(filter.find("night"));
   
-  EXPECT_NE(true, filter.find("helloo"));
-  EXPECT_NE(true, filter.find("applle"));
-  EXPECT_NE(true, filter.find("moning"));
-  EXPECT_NE(true, filter.find("nait"));
+  EXPECT_FALSE(filter.find("helloo"));
+  EXPECT_FALSE(filter.find("applle"));
+  EXPECT_FALSE(filter.find("moning"));
+  EXPECT_FALSE(filter.find("nait"));
 }
