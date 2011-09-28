@@ -1,6 +1,13 @@
 single variant data for profiling
 
-simple.baseline.txt - baseline result 
-simple.data.txt - phrase text only
-simple.ideal.txt - 100% acuracy result
-simple.learn.txt - sliced learn data
+simple.learn.dat - sliced learn data
+simple.learn.oneword.dat - only one word phrases from simple.learn.dat
+simple.learn.oneword.300.dat - 300 samples from simple.learn.oneword.dat
+
+simple.data.dat - first column only from simple.learn.dat
+simple.data.oneword.dat - first column only from simple.learn.oneword.dat
+simple.data.oneword.300.dat - first column only from simple.learn.oneword.300.dat
+
+simple.result.baseline.dat - baseline result on simple.data.dat
+simple.result.ideal.dat - 100% acuracy result on simple.data.dat
+
