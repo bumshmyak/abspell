@@ -16,7 +16,7 @@ using std::string;
 
 int lev(const string& lhs, const string& rhs, int max_distance = 0) {
   int result = get_levenshtein_distance(lhs, rhs, max_distance);
-  ASSERT_EQ(result, get_levenshtein_distance(rhs, lhs, max_distance));
+  EXPECT_EQ(result, get_levenshtein_distance(rhs, lhs, max_distance));
   return result;
 }
 
@@ -63,7 +63,7 @@ double wlev(const string& lhs, const string& rhs, int max_distance = 0) {
   const double cost_matrix[] = {0.5, 1,1,1,1,0};
   double result = 
       get_weighted_levenshtein_distance(lhs, rhs, max_distance + 10, cost_matrix);
-  ASSERT_EQ(result,
+  EXPECT_EQ(result,
       get_weighted_levenshtein_distance(rhs, lhs, max_distance + 10, cost_matrix));
   return result;
 }

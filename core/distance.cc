@@ -28,7 +28,7 @@ T min(const T& a, const T& b, const T& c) {
 }
 
 template <typename T>
-T get_levenshtein_distance(
+T get_levenshtein_distance_impl(
     const string& first_line,
     const string& second_line,
     int max_distance,
@@ -63,23 +63,42 @@ T get_levenshtein_distance(
             second_line.size() - 1 - second_index)));
 
       if (first_index == 0) {
-        new_front[first_index] = min(
-            (second_index + 1) * MISS_COST * cost_factor,
-            front[first_index] + ((second_index > 0 && second_line[second_index] == second_line[second_index - 1]) ? DOUBLING_COST : INSERT_COST) * cost_factor,
-            second_index * MISS_COST * cost_factor +
-              (first_line[first_index] == second_line[second_index] ? 0 : REPLACE_COST * cost_factor));
+        T miss_distance = (second_index + 1) * MISS_COST * cost_factor;
+
+        T insert_distance = front[first_index] +
+          ((second_index > 0 &&
+            second_line[second_index] == second_line[second_index - 1]) ?
+              DOUBLING_COST :
+              INSERT_COST) * cost_factor;
+
+        T replace_distance = second_index * MISS_COST * cost_factor +
+          (first_line[first_index] == second_line[second_index] ?
+            0 :
+            REPLACE_COST * cost_factor);
+
+        new_front[first_index] = min(miss_distance, insert_distance, replace_distance);
       } else {
-        new_front[first_index] = min(
-            new_front[first_index - 1] + ((first_line[first_index] == first_line[first_index - 1]) ? DOUBLING_COST : MISS_COST) * cost_factor,
-            front[first_index] + ((second_index > 0 && second_line[second_index] == second_line[second_index - 1]) ? DOUBLING_COST : INSERT_COST) * cost_factor,
-            front[first_index - 1] +
+        T miss_distance = new_front[first_index - 1] +
+          ((first_line[first_index] == first_line[first_index - 1]) ?
+            DOUBLING_COST :
+            MISS_COST) * cost_factor;
+
+        T insert_distance = front[first_index] +
+          ((second_index > 0 &&
+            second_line[second_index] == second_line[second_index - 1]) ?
+              DOUBLING_COST :
+              INSERT_COST) * cost_factor;
+
+        T replace_distance = front[first_index - 1] +
               (first_line[first_index] == second_line[second_index] ?
                 0 :
                 ((second_index > 0 &&
                   first_line[first_index - 1] == second_line[second_index] &&
                   first_line[first_index] == second_line[second_index - 1]) ?
                     TRANSPOSE_COST - REPLACE_COST :
-                    REPLACE_COST) * cost_factor));
+                    REPLACE_COST) * cost_factor);
+
+        new_front[first_index] = min(miss_distance, insert_distance, replace_distance);
       }
     }
     front.swap(new_front);
@@ -96,7 +115,7 @@ double get_weighted_levenshtein_distance(
   if (cost_matrix == NULL) {
     cost_matrix = default_cost_matrix;
   }
-  return get_levenshtein_distance<double>(first_line, second_line, max_distance, cost_matrix);
+  return get_levenshtein_distance_impl<double>(first_line, second_line, max_distance, cost_matrix);
 }
 
 int get_levenshtein_distance(
@@ -104,7 +123,7 @@ int get_levenshtein_distance(
     const string& second_line,
     int max_distance) {
   const int cost_matrix[] = {1, 1, 1, 1, 1, 0};
-  return get_levenshtein_distance<int>(first_line, second_line, max_distance, cost_matrix);
+  return get_levenshtein_distance_impl<int>(first_line, second_line, max_distance, cost_matrix);
 }
 
 
