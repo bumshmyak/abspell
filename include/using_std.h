@@ -24,6 +24,8 @@ using std::swap;
 using std::max;
 using std::min;
 
+using std::make_pair;
+
 #include <sstream>
 #include <iostream>
 #include <fstream>

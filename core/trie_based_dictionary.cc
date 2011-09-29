@@ -12,15 +12,15 @@ void TTrieDictionary::Load(istream& is) {
     getline(is, line);
     vector<string> fields;
     boost::split(fields, line, boost::is_any_of("\t"));
-    
+
     if (fields.size() < 2) {
       cerr << "skipping line: " << line_counter << endl;
       continue;
     }
-    
+
     size_t frequency = atoi(fields[0].c_str());
     const string& word = fields[1];
-         
+
     trie_.add(word, next_word_id_);
     word_attribute_dict_[next_word_id_] = TWordAttribute(fields[1], frequency);
     total_frequency_ += frequency;
@@ -70,9 +70,9 @@ void TTrieDictionary::GetNeighbourWords(
   for (size_t index = 0; index < word_id_set.size(); ++index) {
     word_attribute_dict_t::const_iterator it =
         word_attribute_dict_.find(word_id_set[index]);
-      
+
     if (it == word_attribute_dict_.end()) {
-      cerr << "bad word_id: " << word_id_set[index] << endl; 
+      cerr << "bad word_id: " << word_id_set[index] << endl;
     } else {
       suggestions_ptr->push_back(it->second.word_);
     }
@@ -81,11 +81,11 @@ void TTrieDictionary::GetNeighbourWords(
 
 size_t TTrieDictionary::GetMaxDistance() const {
   return max_distance_;
-} 
-  
+}
+
 void TTrieDictionary::SetMaxDistance(size_t max_distance) {
   max_distance_ = max_distance;
-} 
+}
 
 
 

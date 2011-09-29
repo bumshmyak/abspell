@@ -4,6 +4,8 @@
 #include <dummy_phrase_corrections_generator.h>
 #include <levenshtein_corrections_generator.h>
 
+#include <dmetaph.h>
+
 #include <boost/shared_ptr.hpp>
 
 #include <using_std.h>
@@ -18,8 +20,20 @@ int main(int argc, char** argv) {
   boost::shared_ptr<IDictionary> dict_ptr;
   boost::shared_ptr<IWordCandidatesGenerator> word_corrector_ptr;
 
+  class TMetaphoneEncoder : public IStringEncoder {
+   public:
+    string operator()(const string& text) const {
+      return metaphone(text);
+    }
+  } metaphone_encoder;
+
   if (argc >= 3 && string(argv[2]) == "trie" ) {
     suggesting_dict_ptr.reset(new TTrieDictionary());
+    word_corrector_ptr.reset(new LevenshteinWordCandidatesGenerator(*suggesting_dict_ptr));
+    reinterpret_cast<TTrieDictionary*>(suggesting_dict_ptr.get())->SetMaxDistance(1);
+    suggesting_dict_ptr->LoadFromFile(argv[1]);
+  } else if (argc >= 3 && string(argv[2]) == "metaphone" ) {
+    suggesting_dict_ptr.reset(new TGluedTrieDictionary(metaphone_encoder));
     word_corrector_ptr.reset(new LevenshteinWordCandidatesGenerator(*suggesting_dict_ptr));
     reinterpret_cast<TTrieDictionary*>(suggesting_dict_ptr.get())->SetMaxDistance(1);
     suggesting_dict_ptr->LoadFromFile(argv[1]);
