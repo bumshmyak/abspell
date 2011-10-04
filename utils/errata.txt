@@ -1,0 +1,140 @@
+emminent	1:imminent  -> 1:eminent  i->e vs m->mm
+
+workout ->  work out
+
+collonade 1:colonnade -> 1:collonade  need 2x
+
+hee haw 1:hee haw -> hee haw 1:he haw    no guess
+
+paula dean  1:paula deen   ->  1:paula dean   e -> a needs lower weight
+
+uto mile 1:bedford automile -> bedford auto mile
+
+derango 1:derango  ->  durango   e->u  too much weight
+
+nterbread  1:interbreed  -> interbred  don't know why
+
+lcohol related relative risk of driver fatalities  1:zador  ->  1:zadora ??
+
+sconsin ccap  ->  1:wisconsin cap
+
+seeked  1:sought   ->  seemed   irregular verb
+
+phillipine traditions 1:philippine  ->  1:phillipine  ->  doubling miss
+
+dieing  1:dyeing  ->  dieing  1:dining  i->y better then e->n
+
+unitesstates  1:unitedstates  -> 1:unitesstates  (united states)
+
+sucessfuly  1:successfully -> 1:sucessfuly  double doubling error
+
+olies 1:ollie s  -> olives  l -> ll better then +v  +need name dict
+
+rite aide boulder 1:rite aid boulder _-> aide   (we not fix first|last letter)
+
+brad nealy  1:brad neely  -> nealy   (name dict)
+
+1800flowers 1:1 800 flowers  -> 1800flowers  separate numbers from words (+exceptions)
+
+shrinked  1:shrunk  ->  shrinked  1:shrieked (irregular verb)
+
+embezelled  1:embezzled  ->  1:embezelled  ( double doubling  )
+
+irelevent 1:irrelevant  ->  irelevent 1:irelevent (double miss)
+
+signficant  1:significant  ->  1:signficant )waste in dictionary)
+
+cintaz work clothes 1:cintas work clothes  -> 1:cintaz 9don't fix last letter)
+
+accension 1:accession  ->  1:ascension  (no guess)
+
+portugese 1:portuguese -> 1:portugese  (lower error const)  remove waste from dict
+
+cell cept rapamune prograf  1:cellcept rapamune prograf  ->  cell cept  (glue)
+
+silverstatekennelclub 1:silver state kennel club  (need splitter)
+
+
+heared  1:heard  ->  heared  (irregular verbs) + remove waste
+
+temptinganime 1:tempting anime ->  1:temptinganime  (need splitter)
+
+manouvers 1:manoeuvres  ->  1:maneuvers (double miss + remove waste)
+
+bartowcounty georgia  1:bartow county georgia -> bartowcounty georgia  (splitter)
+
+sumer 1:sumer  -> 1:summer  ( remove waste + lower error cost)
+
+harrassed 1:harassed  -> harrassed (remove waste + lower error cost)
+
+drop shippers wholesalers 1:dropshippers wholesalers  -> drop shippers (splitter)
+
+tvguard 1:tv guard -> tvguard  (splitter)
+
+sinse 1:sines ->  sinse 1:since (no chance ;-( )
+
+isnt  1:isn t -> isnt  (отормать прилипшую букву)
+
+doj usao civil div ft meyers  1:doj usa civil div ft myers -> uso ( don't fix last)
+
+prominately 1:prominently  ->  1:prominately  (need double error)
+
+savingsbond value 1:savings bond value  (need splitter)
+
+eddie bauer carseat replacement parts 1:eddie bauer car seat replacement p.. (splitter)
+
+animal plant  1:animal planet -> animal plant (need word ngrams)
+
+snese 1:sneeze  -> 1:sense  (e -> ee + s-> z) better then ne->en (no chance)
+
+
+elsbeth 1:elsbeth -> elsbeth 1:elspeth  (no chance)
+
+awared  1:awarded -> award ((no chance)
+
+themselfs 1:themselves  -> 1:themselfs (noon[f] + s -> noon[v] + es) (or double change)
+
+tradingpost 1:trading post (splitter)
+
+marisota  1:marisota -> mariota  (remove waste from dict)
+
+momento 1:memento -> momento (no chance)
+
+twistys 1:twistys twists (no chance)
+
+billclinton 1:bill clinton (splitter)
+
+medicamentos genericos  1:medicamentos genericos -> 1:medicaments generics (no chance)
+
+thn 1:then  -> thn 1:than  (no chance)
+
+
+baltimorecity 1:baltimore city  (splitter)
+
+tan borason  1:stan boreson  -> stan borason  1:stan borison    ( no chance)
+
+incompatablity  1:incompatibility -> incompatablity (double change)
+
+bearing point 1:bearingpoint (glue)
+
+dessicated  1:desiccated 1:dessicated (double doubleng + lower cost & remove waste)
+
+monolite  1:monolithic  -> monolite (don't edit end)
+
+mikesfamousharleydavidson 1:mikes famous harley davidson   (splitter)
+
+surreptiously 1:surreptitiously  (double change)
+
+nisson pathfinder 1:nissan pathfinder  (names dict + ngramm index)
+
+eqcb miami dade 1:eqcb miami dade -> ecb (remove waste && no chance)
+
+disney chanel 1:disney channel -> chanel (lower cost)
+
+tarbuck logo photo galleries 1:starbucks logo photo galleries  _ -> names dictionary + dont edit last letter
+
+battle of bullrun 1:battle of bull run (word ngrams + splitter)
+
+aeropostle houston texas  1:aeropostale houston texas (no chance)
+
+continue from (:739)
