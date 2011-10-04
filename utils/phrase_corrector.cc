@@ -7,12 +7,13 @@
 #include <using_std.h>
 
 int main(int argc, char** argv) {
-  if (argc < 2) {
-    cerr << "USAGE: " << argv[0] << " <dict file> " << endl;
+  if (argc < 3) {
+    cerr << "USAGE: " << argv[1] << " <dict file> " << endl;
+    cerr << "USAGE: " << argv[2] << " <bigram file> " << endl;
     return 1;
   }
   
-  // TTrieDictionary dict;
+   // TTrieDictionary dict;
   THashDictionary dict;
   dict.LoadFromFile(argv[1]);
   //dict.SetMaxDistance(1);
@@ -22,7 +23,7 @@ int main(int argc, char** argv) {
   // LevenshteinWordCandidatesGenerator word_corrector(dict);
   SimpleLevenshteinWordCandidatesGenerator word_corrector(dict);  
   NgramPhraseCorrector phrase_corrector(word_corrector, WordPenalty);
-  phrase_corrector.PrepareBigramDict("../data/dict/bigram.dat");
+  phrase_corrector.PrepareBigramDict(argv[2]);
 
   while (!cin.eof()) {
     string line;
@@ -31,7 +32,7 @@ int main(int argc, char** argv) {
     vector<CorrectionCandidate> corrections;
     phrase_corrector.GetCandidates(line, corrections);
 
-    cout << line;
+    cout << line << endl;
     for (size_t index = 0; index < corrections.size(); ++index) {
       cout << "\t";
       cout << corrections[index].weight_;
