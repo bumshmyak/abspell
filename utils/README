@@ -1,0 +1,9 @@
+agg.pl - склеивание статистики по словам(фразам) за разные годы
+
+так можно из кучи словарей от гугла сделать один хороший:
+for i in 0 9; do unzip -p ~/Downloads/googlebooks-eng-all-1gram-20090715-${i}.csv.zip |grep -E "^[A-Za-z]+\s200[0-9]" | ./agg.pl > agg.${i}.txt ; done
+
+cat agg.*.txt | ./prepare | sort -k 1 -n > google-book.1-gram.dict
+
+prepare.cpp - прога с функциональность: perl -nae 'print join("\t", $F[0], $F[1], $F[4])."\n" if $F[1] =~ m/^[a-z]+$/;'
+
