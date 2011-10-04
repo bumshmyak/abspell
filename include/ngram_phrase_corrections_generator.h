@@ -6,6 +6,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <corrections_generator.h>
+#include <cmath>
 
 class NgramPhraseCorrector :
 public IPhraseCandidatesGenerator {

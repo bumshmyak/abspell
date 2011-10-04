@@ -1,9 +1,11 @@
 #include <ngram_phrase_corrections_generator.h>
 
 void NgramPhraseCorrector::GetCandidates(
-					 const std::string& Phrase,
-					 std::vector<CorrectionCandidate>& Candidates) const {
+					 const string& Phrase,
+					 vector<CorrectionCandidate>& Candidates) const {
   
+  size_t NumberToShow = 5;
+
   vector<string> Words;
   boost::split(Words, Phrase, boost::is_any_of(" \n\t"));
   
@@ -19,6 +21,8 @@ void NgramPhraseCorrector::GetCandidates(
   vector<vector<CorrectionCandidate> > Phrases;
   CombineWords(AllWords, &Phrases);
 
+  vector<CorrectionCandidate> PreCandidates;
+
   for (size_t PhraseIndex = 0; PhraseIndex < Phrases.size(); ++PhraseIndex) {
     double Weight = CalculatePhraseWeight(Phrases[PhraseIndex]);
     string Phrase;
@@ -26,9 +30,12 @@ void NgramPhraseCorrector::GetCandidates(
       Phrase += Phrases[PhraseIndex][WordIndex].text_;
       Phrase += " ";
     }
-    Candidates.push_back(CorrectionCandidate(Phrase, Weight)); 
+    PreCandidates.push_back(CorrectionCandidate(Phrase, Weight)); 
   }
-
+  
+  sort(PreCandidates.rbegin(), PreCandidates.rend());
+  
+  Candidates = vector<CorrectionCandidate>(PreCandidates.begin(), PreCandidates.begin() + NumberToShow);
 
 }
 
@@ -68,16 +75,16 @@ void NgramPhraseCorrector::CombineWords(
 }
 
 double NgramPhraseCorrector::CalculatePhraseWeight(const vector<CorrectionCandidate>& Phrase) const {
-  double Result = 1;
+  double Result = 0;
   for (size_t WordIndex = 0; WordIndex < Phrase.size(); ++WordIndex) {
     if (!WordIndex) {
       // first word in phrase
-      Result *= Phrase[WordIndex].weight_;
+      Result += Phrase[WordIndex].weight_;
     } else if (WordIndex + 1 == Phrase.size()) {
       // last word in phrase
-      Result *= GetBigramWeight(Phrase[WordIndex - 1], Phrase[WordIndex]) * Phrase[WordIndex].weight_;
+      Result += GetBigramWeight(Phrase[WordIndex - 1], Phrase[WordIndex]) + Phrase[WordIndex].weight_;
     } else {
-      Result *= GetBigramWeight(Phrase[WordIndex - 1], Phrase[WordIndex]);
+      Result += GetBigramWeight(Phrase[WordIndex - 1], Phrase[WordIndex]);
     }
   }
   return Result;
@@ -85,31 +92,34 @@ double NgramPhraseCorrector::CalculatePhraseWeight(const vector<CorrectionCandid
 
 double NgramPhraseCorrector::GetBigramWeight(const CorrectionCandidate& Prev,
 					     const CorrectionCandidate& Next) const {
-  //magic constant
-  size_t TotalCount =  3389649500u;
-  map<pair<string, string>, double>::const_iterator ToFind = BigramDict.find(pair<string,string>(Prev.text_, Next.text_));
+   map<pair<string, string>, double>::const_iterator ToFind = BigramDict.find(pair<string,string>(Prev.text_, Next.text_));
   if (ToFind != BigramDict.end()) {
     return ToFind->second;
   } else {
-    return (1. / TotalCount);
+    // smoothing
+    return log(1. / TotalCount);
   }
 }
 
 void NgramPhraseCorrector::PrepareBigramDict(const string Filename) {
-  //magic constant
-  size_t TotalCount =  3389649500u;
+ 
   ifstream Input;
   Input.open(Filename.c_str(), std::ios::in);
 
-  while (!Input) {
+   while (!Input.eof()) {
 
     string Line;
     getline(Input,Line);
+  
+    if (!Line.length()) {
+      continue;
+    }
 
     vector<string> Words;
     boost::split(Words, Line, boost::is_any_of(" \n\t"));
     
     BigramDict[pair<string, string>(Words[0], Words[1])] = (boost::lexical_cast<size_t>(Words[2]) / TotalCount);
+
   }
 
 }
