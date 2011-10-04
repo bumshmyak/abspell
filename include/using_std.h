@@ -14,6 +14,7 @@ using std::map;
 using std::multimap;
 using std::string;
 using std::list;
+using std::pair;
 
 #include <algorithm>
 

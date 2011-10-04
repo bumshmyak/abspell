@@ -17,8 +17,8 @@ class bloom_filter {
   }
 
   uint32_t get_hash(const string& text, int id) const {
-    const uint64_t base = 4012424397;
-    const uint64_t factor[] = {1234324231,2534523787,2325532121,3666555667,3444333111,1234567123,1000111333,4000777333};
+    const uint64_t base = 4012424397u;
+    const uint64_t factor[] = {1234324231u,2534523787u,2325532121u,3666555667u,3444333111u,1234567123u,1000111333u,4000777333u};
     uint64_t value = 0;
     for (size_t index = 0; index < text.size(); ++index) {
       value = (value * factor[id] + static_cast<uint8_t>(text[index])) % base;

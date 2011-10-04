@@ -8,7 +8,7 @@ HEADERS = $(INCLUDES_PATH)/*.h
 
 .PHONY: check clean all 
 
-all: stats dict-search best_word_corrector test_metaphone
+all: stats dict-search best_word_corrector test_metaphone phrase_corrector
 
 stats : stats.cc
 	$(CXX) -g -o $@ $<
@@ -20,6 +20,9 @@ best_word_corrector: best_word_corrector.cc $(HEADERS)
 	$(CXX) -o $@ $< $(CXXFLAGS) -I$(INCLUDES_PATH) $(LDFLAGS) $(CXXFLAGS)
 
 test_metaphone: test_metaphone.cc $(HEADERS)
+	$(CXX) -o $@ $< $(CXXFLAGS) -I$(INCLUDES_PATH) $(LDFLAGS) $(CXXFLAGS)
+
+phrase_corrector: phrase_corrector.cc $(HEADERS)
 	$(CXX) -o $@ $< $(CXXFLAGS) -I$(INCLUDES_PATH) $(LDFLAGS) $(CXXFLAGS)
 
 clean:
