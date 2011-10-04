@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#include <boost/assign.hpp>
+
 #include "levenshtein_corrections_generator.h"
 
 using std::string;
@@ -74,6 +76,38 @@ void SimpleLevenshteinWordCandidatesGenerator::GetCandidates(
   double doubling_coef = 0.4;
   double levenshtein_coef = 11.5;
 
+  map<string,double> change_weight;
+  boost::assign::insert(change_weight) 
+      ("ck", 0.8)
+      ("kc", 0.8)
+      ("cq", 0.8)
+      ("qc", 0.8)
+      
+      ("cs", 0.8)
+      ("sc", 0.8)
+      ("sz", 0.8)
+      ("zs", 0.8)
+
+/*
+      ("st", 0.9)
+      
+      ("rl", 0.9)
+      ("lr", 0.9)
+  */    
+      ("ao", 0.9)
+      ("oa", 0.9)
+      ("ae", 0.9)
+      ("ea", 0.9)
+      ("ei", 0.9)
+      ("ie", 0.9)
+/*      
+      ("wu", 0.9)
+      ("uw", 0.9)
+      ("wv", 0.9)
+      ("vw", 0.9)
+*/
+      ;
+
   if (has_non_alphabetic_symbols(word)) {
     candidates.push_back(CorrectionCandidate(word, 1.0));
     return;
@@ -87,10 +121,17 @@ void SimpleLevenshteinWordCandidatesGenerator::GetCandidates(
     for (int i = 1; i + 1 < word.size(); ++i) {
       for (char c = 'a'; c <= 'z'; ++c) {
         if (word[i] != c) {
+          double cost = change_coef;
+          string key(1, word[i]);
+          key += c;
+          if (change_weight.count(key)) {
+            cost *= change_weight[key];
+          }
           precandidates.push_back(
-              CorrectionCandidate(word.substr(0, i) + c + word.substr(i + 1), change_coef));
+              CorrectionCandidate(word.substr(0, i) + c + word.substr(i + 1), cost));
         }
       }
+
     }	
   }
 
@@ -131,6 +172,20 @@ void SimpleLevenshteinWordCandidatesGenerator::GetCandidates(
       candidates.back().weight_ =
           log(dictionary_.GetWordFrequency(precandidates[i].text_) + 1) -
           levenshtein_coef * candidates.back().weight_;
+    }
+  }
+
+  double compo_freq = dictionary_.GetWordFrequency(word);
+  if (compo_freq < 2) {
+    for (int i = 4; i + 4 < word.size(); ++i) {
+      double first_freq = dictionary_.GetWordFrequency(word.substr(0,i));
+      double second_freq = dictionary_.GetWordFrequency(word.substr(i));
+      if (min(first_freq, second_freq) > 17000) {
+        candidates.push_back(
+            CorrectionCandidate(
+              word.substr(0, i) + ' ' + word.substr(i), 
+              log(sqrt(first_freq*second_freq))));
+      }
     }
   }
 

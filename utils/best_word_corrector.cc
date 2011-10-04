@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
   } else if (argc >= 3 && string(argv[2]) == "metaphone" ) {
     suggesting_dict_ptr.reset(new TGluedTrieDictionary(metaphone_encoder));
     word_corrector_ptr.reset(new LevenshteinWordCandidatesGenerator(*suggesting_dict_ptr));
-    reinterpret_cast<TTrieDictionary*>(suggesting_dict_ptr.get())->SetMaxDistance(1);
+    reinterpret_cast<TTrieDictionary*>(suggesting_dict_ptr.get())->SetMaxDistance(0);
     suggesting_dict_ptr->LoadFromFile(argv[1]);
   } else {
     dict_ptr.reset(new THashDictionary());
