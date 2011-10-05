@@ -39,6 +39,7 @@ int main(int argc, char** argv) {
 
     vector<CorrectionCandidate> corrections;
     phrase_corrector.GetCandidates(line, corrections);
+
     cout << line;
     for (size_t index = 0; index < corrections.size(); ++index) {
       cout << "\t";

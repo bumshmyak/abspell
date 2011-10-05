@@ -78,6 +78,12 @@ void SimpleLevenshteinWordCandidatesGenerator::GetCandidates(
     candidates.push_back(CorrectionCandidate(word, 1.0));
     return;
   }
+  
+  if (word.size() < 5) {
+    candidates.push_back(CorrectionCandidate(word, 1.0));
+    return;
+  }
+
 
   vector<CorrectionCandidate> precandidates;
 

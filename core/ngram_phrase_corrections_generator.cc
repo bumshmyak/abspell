@@ -1,8 +1,8 @@
 #include <ngram_phrase_corrections_generator.h>
 
 void NgramPhraseCorrector::GetCandidates(
-					 const string& Phrase,
-					 vector<CorrectionCandidate>& Candidates) const {
+  const string& Phrase,
+  vector<CorrectionCandidate>& Candidates) const {
   
   size_t NumberToShow = 1;
 
@@ -12,7 +12,6 @@ void NgramPhraseCorrector::GetCandidates(
   vector<vector<CorrectionCandidate> > AllWords;
 
   for (size_t WordIndex = 0; WordIndex < Words.size(); ++WordIndex) {
-   
     vector<CorrectionCandidate> WordCandidates;
     WordCorrector_.GetCandidates(Words[WordIndex], WordCandidates, WordPenalty_);
     if (!WordCandidates.size()) {
@@ -20,7 +19,6 @@ void NgramPhraseCorrector::GetCandidates(
       WordCandidates.push_back(CorrectionCandidate(Words[WordIndex], 1));
     }
     AllWords.push_back(WordCandidates);
-
   }
   
   if (AllWords.size() > 8) {
@@ -79,8 +77,8 @@ void NgramPhraseCorrector::GetCandidates(
  }
 
 void NgramPhraseCorrector::CombineWords(
-					const vector<vector<CorrectionCandidate> >& AllWords,
-					vector<vector<CorrectionCandidate> >* Phrases) const {
+  const vector<vector<CorrectionCandidate> >& AllWords,
+  vector<vector<CorrectionCandidate> >* Phrases) const {
 
   size_t DuplicateNumber = 1;
 
@@ -96,17 +94,17 @@ void NgramPhraseCorrector::CombineWords(
     for (size_t SeriesIndex = 0; SeriesIndex < TotalNumber / (AllWords[WordIndex].size() * DuplicateNumber) ; ++SeriesIndex) {
       // series duplicate
       for (size_t VariantIndex = 0; VariantIndex <  AllWords[WordIndex].size(); ++VariantIndex) {
-	//symbol duplicate
-	for (size_t DuplicateIndex = 0; DuplicateIndex < DuplicateNumber; ++DuplicateIndex) {
-	  if (!WordIndex) {
-	    vector<CorrectionCandidate> Empty;
-	    Empty.push_back(AllWords[WordIndex][VariantIndex]);
-	    (*Phrases).push_back(Empty);
-	  } else {
-	    (*Phrases)[Index].push_back(AllWords[WordIndex][VariantIndex]);
-	    ++Index;
-	  }
-	}
+        //symbol duplicate
+        for (size_t DuplicateIndex = 0; DuplicateIndex < DuplicateNumber; ++DuplicateIndex) {
+          if (!WordIndex) {
+            vector<CorrectionCandidate> Empty;
+            Empty.push_back(AllWords[WordIndex][VariantIndex]);
+            (*Phrases).push_back(Empty);
+          } else {
+            (*Phrases)[Index].push_back(AllWords[WordIndex][VariantIndex]);
+            ++Index;
+          }
+        }
       }
     }
   }

@@ -6,6 +6,7 @@
 
 #include <dmetaph.h>
 
+#include <boost/regex.hpp>
 #include <boost/shared_ptr.hpp>
 
 #include <using_std.h>
