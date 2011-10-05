@@ -13,9 +13,10 @@ public IPhraseCandidatesGenerator {
 
  public:
 
- NgramPhraseCorrector(const IWordCandidatesGenerator& WordCorrector, double WordPenalty) 
+ NgramPhraseCorrector(const IWordCandidatesGenerator& WordCorrector, double WordPenalty, double Coef) 
    : WordCorrector_(WordCorrector), 
-     WordPenalty_(WordPenalty) {
+     WordPenalty_(WordPenalty),
+     Coef_(Coef) {
   }
 
   void GetCandidates(
@@ -40,7 +41,7 @@ public IPhraseCandidatesGenerator {
   const IWordCandidatesGenerator& WordCorrector_;
   const double WordPenalty_;
   map<pair<string, string>, double> BigramDict;
-  //magic constant
-  static const size_t TotalCount = 3389649500u;  
+  //coef
+  double Coef_;
 };
 
