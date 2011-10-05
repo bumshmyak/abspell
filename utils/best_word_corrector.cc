@@ -48,18 +48,20 @@ int main(int argc, char** argv) {
   while (!cin.eof()) {
     string line;
     getline(cin, line);
-    
-    vector<CorrectionCandidate> corrections;
-    phrase_corrector.GetCandidates(line, corrections);
+    if (!cin.eof()) {
+      vector<CorrectionCandidate> corrections;
+      phrase_corrector.GetCandidates(line, corrections);
 
-    cout << line;
-    for (size_t index = 0; index < corrections.size(); ++index) {
-      cout << "\t";
-      cout << corrections[index].weight_;
-      cout << ":";
-      cout << corrections[index].text_;
+      cout << line;
+      for (size_t index = 0; index < corrections.size(); ++index) {
+        cout << "\t";
+        cout << corrections[index].weight_;
+        cout << ":";
+        cout << corrections[index].text_;
+      }
+      // cout << "\t0.001:" << line << endl;
+      cout << endl;
     }
-    cout << endl;
   }
 
   return 0;
