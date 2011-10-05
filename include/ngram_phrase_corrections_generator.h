@@ -41,7 +41,8 @@ public IPhraseCandidatesGenerator {
   const IWordCandidatesGenerator& WordCorrector_;
   const double WordPenalty_;
   map<pair<string, string>, double> BigramDict;
-  //coef
+  // coef
+  // offset for weight of phrase
   double Coef_;
 };
 

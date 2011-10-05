@@ -4,7 +4,7 @@ void NgramPhraseCorrector::GetCandidates(
 					 const string& Phrase,
 					 vector<CorrectionCandidate>& Candidates) const {
   
-  size_t NumberToShow = 2;
+  size_t NumberToShow = 1;
 
   vector<string> Words;
   boost::split(Words, Phrase, boost::is_any_of(" \n\t"));
@@ -55,6 +55,7 @@ void NgramPhraseCorrector::GetCandidates(
     Phrase.erase(Phrase.length() - 1, 1);
     PreCandidates.push_back(CorrectionCandidate(Phrase, Weight));
   }
+
   sort(PreCandidates.rbegin(), PreCandidates.rend());
  
   if (PreCandidates.size() > NumberToShow) {
@@ -69,6 +70,10 @@ void NgramPhraseCorrector::GetCandidates(
     for (size_t Index = 0; Index < Candidates.size(); ++Index) {
       Candidates[Index].weight_ = Candidates[Index].weight_ - LastWeight + 1;
     }
+  }
+  // increase first weight
+  if ((Candidates.size() > 1) && ((Candidates.back()).weight_ / Candidates[0].weight_) < 10) {
+    Candidates[0].weight_ = 10 * (Candidates.back()).weight_;
   }
   
  }
